@@ -1,0 +1,5 @@
+tflite-model-make
+setuptools
+wheel
+python3-devel
+cmake
