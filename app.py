@@ -20,11 +20,14 @@ class App(ctk.CTk):
         # Create a dictionary to hold all the pages
         self.pages = {}
 
+        # Store the student data globally within the app (initially None)
+        self.student_data = None
+
         # Initialize the frames (pages)
         self.create_frames()
 
         # Show the homepage initially
-        self.show_frame("dispose_waste")
+        self.show_frame("homepage")
 
     def create_frames(self):
         all_users = [(f"User{i}", random.randint(1, 100)) for i in range(1, 101)]
@@ -33,7 +36,7 @@ class App(ctk.CTk):
         # Create and store each frame, passing the navigation callback
         self.pages["homepage"] = HomePage(self, self.show_frame)
         self.pages["main_menu"] = MainMenu(self, self.show_frame)
-        self.pages["check_points"] = CheckPoints(self, self.show_frame, username="John", points=10)
+        self.pages["check_points"] = CheckPoints(self, self.show_frame, username="", points=0)
         self.pages["leaderboard"] = Leaderboard(self, self.show_frame, user_rank=user_rank, all_users=all_users)
         self.pages["dispose_waste"] = DisposeWaste(self, self.show_frame)
 
@@ -41,13 +44,23 @@ class App(ctk.CTk):
         for frame_name, frame in self.pages.items():
             frame.grid(row=0, column=0, sticky="nsew")
 
-    def show_frame(self, frame_name):
+    def show_frame(self, frame_name, student_data=None):
         # Hide all frames
         for frame in self.pages.values():
             frame.grid_forget()
 
+        # Update student data if provided
+        if student_data:
+            self.student_data = student_data
+
+        # Pass the student data to the frame if needed
+        frame = self.pages[frame_name]
+        if self.student_data:
+            if hasattr(frame, 'update_with_student_data'):
+                frame.update_with_student_data(self.student_data)
+
         # Show the requested frame
-        self.pages[frame_name].grid(row=0, column=0, sticky="nsew")
+        frame.grid(row=0, column=0, sticky="nsew")
 
 if __name__ == "__main__":
     # Initialize customtkinter appearance

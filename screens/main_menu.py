@@ -14,20 +14,28 @@ class MainMenu(ctk.CTkFrame):
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-         # Left Frame (75% of width)
+        # Left Frame: Show Points
         self.left_frame = ctk.CTkFrame(self)
         self.left_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+        self.left_frame.bind("<Button-1>", self.on_show_points_click)  # Bind click event to the left frame
 
         self.show_points_icon = ctk.CTkLabel(self.left_frame, text="Show Points", font=("Arial", 36), fg_color="white", bg_color="green")
         self.show_points_icon.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        self.show_points_icon.bind("<Button-1>", self.on_show_points_click)  # Also make the label clickable
 
-        # Right Frame (25% of width)
+        # Right Frame: Dispose Waste
         self.right_frame = ctk.CTkFrame(self, fg_color="white")
         self.right_frame.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
+        self.right_frame.bind("<Button-1>", self.on_dispose_waste_click)  # Bind click event to the right frame
 
         self.dispose_waste_icon = ctk.CTkLabel(self.right_frame, text="Dispose Waste", font=("Arial", 36), fg_color="white", bg_color="blue")
         self.dispose_waste_icon.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        self.dispose_waste_icon.bind("<Button-1>", self.on_dispose_waste_click)  # Also make the label clickable
 
-if __name__ == "__main__":
-    app = MainMenu()
-    app.mainloop()
+    def on_show_points_click(self, event):
+        """Navigate to the Check Points screen."""
+        self.navigate_callback("check_points")
+
+    def on_dispose_waste_click(self, event):
+        """Navigate to the Dispose Waste screen."""
+        self.navigate_callback("dispose_waste")
