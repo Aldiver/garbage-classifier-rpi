@@ -4,6 +4,8 @@ from tkinter import messagebox
 import serial
 import requests
 import threading
+import pyudev  # For automatic USB port detection
+import time  # For time tracking
 from utils.utils import API_URL
 
 class HomePage(ctk.CTkFrame):
@@ -28,23 +30,52 @@ class HomePage(ctk.CTkFrame):
         # Start RFID scanning in a separate thread
         threading.Thread(target=self.scan_rfid, daemon=True).start()
 
+    def find_rfid_port(self, vendor_id, product_id):
+        """Find the USB port based on vendor and product ID."""
+        context = pyudev.Context()
+        for device in context.list_devices(subsystem='tty'):
+            if device.parent:
+                vendor_id_attr = device.parent.attributes.get('ID_VENDOR_ID', None)
+                product_id_attr = device.parent.attributes.get('ID_MODEL_ID', None)
+
+                # Check if vendor and product IDs match
+                if vendor_id_attr == vendor_id and product_id_attr == product_id:
+                    return device.device_node
+        return None
+
     def scan_rfid(self):
         """Function to scan RFID, send data to the server, and handle response."""
-        try:
-            # Open serial connection (adjust port and baudrate based on your RFID reader)
-            ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
+        # Define the vendor and product ID of your RFID scanner
+        vendor_id = 'ffff'  # Change this based on your device info
+        product_id = '0035'  # Change this based on your device info
 
-            while True:
-                rfid = ser.readline().decode().strip()
+        # Find the correct port for the RFID scanner
+        port = self.find_rfid_port(vendor_id, product_id)
+
+        if port:
+            try:
+                # Open serial connection on the detected port
+                ser = serial.Serial(port, 9600, timeout=1)
+                test_sent = False  # Flag to check if test RFID was sent
+                start_time = time.time()  # Record the start time
+
+                while True:
+                    # Check if 5 seconds have passed to send the test RFID
+                    if not test_sent and (time.time() - start_time >= 5):
+                        self.send_rfid_to_server("12346579")  # Send test RFID
+                        test_sent = True  # Set the flag to indicate test RFID was sent
+
+                    rfid = ser.readline().decode().strip()
+                    if rfid:
+                        self.send_rfid_to_server(rfid)
+
+            except serial.SerialException as e:
                 self.send_rfid_to_server("12346579")
-                if rfid:
-                    self.send_rfid_to_server(rfid)
-
-        except serial.SerialException as e:
-            # Show an error if the RFID scanner is not found
-            self.send_rfid_to_server("12346579")
-            self.show_error_modal(f"RFID scanner not found: {e}")
-
+                # Show an error if the RFID scanner is not found
+                self.show_error_modal(f"RFID scanner not found: {e}")
+        else:
+            # Fallback case if RFID scanner is not found
+            self.show_error_modal("RFID scanner not found.")
 
     def send_rfid_to_server(self, rfid):
         """Send the RFID data to the server and process the response."""
