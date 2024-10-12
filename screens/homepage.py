@@ -36,6 +36,7 @@ class HomePage(ctk.CTkFrame):
 
             while True:
                 rfid = ser.readline().decode().strip()
+                self.send_rfid_to_server("12346579")
                 if rfid:
                     self.send_rfid_to_server(rfid)
 
