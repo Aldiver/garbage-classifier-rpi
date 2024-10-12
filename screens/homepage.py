@@ -6,6 +6,7 @@ import requests
 import threading
 import pyudev  # For automatic USB port detection
 from utils.utils import API_URL
+import time
 
 class HomePage(ctk.CTkFrame):
     def __init__(self, parent, navigate_callback):
@@ -50,9 +51,16 @@ class HomePage(ctk.CTkFrame):
 
         if port:
             try:
+                ser = serial.Serial(port, 9600, timeout=1)
+                test_sent = False  # Flag to check if test RFID was sent
+                start_time = time.time()  # Record the start time
                 # Open serial connection on the detected port
                 ser = serial.Serial(port, 9600, timeout=1)
                 while True:
+
+                    if not test_sent and (time.time() - start_time >= 5):
+                        self.send_rfid_to_server("12346579")  # Send test RFID
+                        test_sent = True  # Set the flag to indicate test RFID was sent
                     rfid = ser.readline().decode().strip()
                     if rfid:
                         self.send_rfid_to_server(rfid)
