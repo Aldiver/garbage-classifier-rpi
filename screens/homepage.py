@@ -51,7 +51,7 @@ class HomePage(ctk.CTkFrame):
                     test_sent = False  # Flag to check if test RFID was sent
                     start_time = time.time()  # Record the start time
                     print("HID is open!")
-
+                    rfid = False
                     while True:
                         print(time.time())
                         # Check if 5 seconds have passed to send the test RFID
@@ -62,7 +62,7 @@ class HomePage(ctk.CTkFrame):
 
                         # rfid_data = f.read(8)  # Adjust based on the expected length of the RFID
                         # rfid = rfid_data.decode('utf-8', errors='ignore').strip()
-                            rfid = False
+
 
                         # Check if an RFID was read
                         if rfid:
