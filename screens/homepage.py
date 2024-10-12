@@ -45,6 +45,7 @@ class HomePage(ctk.CTkFrame):
 
         if port:
             try:
+                print("Scanner found!")
                 # Open the HID device for reading
                 with open(port, 'rb') as f:
                     test_sent = False  # Flag to check if test RFID was sent
