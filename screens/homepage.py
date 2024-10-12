@@ -54,6 +54,7 @@ class HomePage(ctk.CTkFrame):
                         # Check if 5 seconds have passed to send the test RFID
                         if not test_sent and (time.time() - start_time >= 5):
                             self.send_rfid_to_server("12346579")  # Send test RFID
+                            print(time.time())
                             test_sent = True  # Set the flag to indicate test RFID was sent
 
                         rfid_data = f.read(8)  # Adjust based on the expected length of the RFID
