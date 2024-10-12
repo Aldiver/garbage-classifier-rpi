@@ -60,8 +60,9 @@ class HomePage(ctk.CTkFrame):
 
                             test_sent = True  # Set the flag to indicate test RFID was sent
 
-                        rfid_data = f.read(8)  # Adjust based on the expected length of the RFID
-                        rfid = rfid_data.decode('utf-8', errors='ignore').strip()
+                        # rfid_data = f.read(8)  # Adjust based on the expected length of the RFID
+                        # rfid = rfid_data.decode('utf-8', errors='ignore').strip()
+                            rfid = False
 
                         # Check if an RFID was read
                         if rfid:
