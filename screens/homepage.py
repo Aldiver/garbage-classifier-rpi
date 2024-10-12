@@ -51,7 +51,7 @@ class HomePage(ctk.CTkFrame):
                     test_sent = False  # Flag to check if test RFID was sent
                     start_time = time.time()  # Record the start time
                     print("HID is open!")
-                    rfid = False
+
                     while True:
                         print(time.time())
                         # Check if 5 seconds have passed to send the test RFID
@@ -60,9 +60,19 @@ class HomePage(ctk.CTkFrame):
 
                             test_sent = True  # Set the flag to indicate test RFID was sent
 
-                        # rfid_data = f.read(8)  # Adjust based on the expected length of the RFID
-                        # rfid = rfid_data.decode('utf-8', errors='ignore').strip()
+                        rfid_data = f.read(8)  # Adjust based on the expected length of the RFID
+                        print(f"Raw RFID data: {rfid_data}")  # Debug message
 
+                        # Check if an RFID was read
+                        if rfid_data:
+                            try:
+                                rfid = rfid_data.decode('utf-8', errors='ignore').strip()
+                                print(f"RFID Read: {rfid}")  # Print the decoded RFID
+                                # Wait for the RFID scan to finish before sending
+                                time.sleep(0.5)  # Add a delay to ensure the scan is complete
+                                self.send_rfid_to_server(rfid)
+                            except Exception as decode_error:
+                                print(f"Error decoding RFID data: {decode_error}")
 
                         # Check if an RFID was read
                         if rfid:
