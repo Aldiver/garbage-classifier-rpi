@@ -50,6 +50,7 @@ class HomePage(ctk.CTkFrame):
                 with open(port, 'rb') as f:
                     test_sent = False  # Flag to check if test RFID was sent
                     start_time = time.time()  # Record the start time
+                    print("HID is open!")
 
                     while True:
                         # Check if 5 seconds have passed to send the test RFID
