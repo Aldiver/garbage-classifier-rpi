@@ -35,11 +35,15 @@ class HomePage(ctk.CTkFrame):
         context = pyudev.Context()
         for device in context.list_devices(subsystem='tty'):
             if device.parent:
-                vendor_id_attr = device.parent.attributes.get('ID_VENDOR_ID', None)
-                product_id_attr = device.parent.attributes.get('ID_MODEL_ID', None)
+                # Fetch the vendor and product ID from the device's parent
+                vendor_id_attr = device.parent.attributes.get('idVendor', None)
+                product_id_attr = device.parent.attributes.get('idProduct', None)
+
+                # Print debug information to ensure correct values are fetched
+                print(f"Checking device: {device.device_node}, Vendor: {vendor_id_attr}, Product: {product_id_attr}")
 
                 # Check if vendor and product IDs match
-                if vendor_id_attr == vendor_id and product_id_attr == product_id:
+                if vendor_id_attr == vendor_id.encode() and product_id_attr == product_id.encode():
                     return device.device_node
         return None
 
