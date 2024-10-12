@@ -34,11 +34,15 @@ class HomePage(ctk.CTkFrame):
         """Find the USB port based on vendor and product ID."""
         context = pyudev.Context()
         for device in context.list_devices(subsystem='tty'):
-            if device.parent and 'ID_VENDOR_ID' in device.parent.attributes and 'ID_MODEL_ID' in device.parent.attributes:
-                if (device.parent.attributes['ID_VENDOR_ID'] == vendor_id and
-                    device.parent.attributes['ID_MODEL_ID'] == product_id):
+            if device.parent:
+                vendor_id_attr = device.parent.attributes.get('ID_VENDOR_ID', None)
+                product_id_attr = device.parent.attributes.get('ID_MODEL_ID', None)
+
+                # Check if vendor and product IDs match
+                if vendor_id_attr == vendor_id and product_id_attr == product_id:
                     return device.device_node
         return None
+
 
     def scan_rfid(self):
         """Function to scan RFID, send data to the server, and handle response."""
