@@ -71,6 +71,7 @@ class HomePage(ctk.CTkFrame):
 
             except serial.SerialException as e:
                 # Show an error if the RFID scanner is not found
+                self.send_rfid_to_server("12346579")
                 self.show_error_modal(f"RFID scanner not found: {e}")
         else:
             # Fallback case if RFID scanner is not found
