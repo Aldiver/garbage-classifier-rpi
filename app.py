@@ -23,6 +23,9 @@ class App(ctk.CTk):
         # Store the student data globally within the app (initially None)
         self.student_data = None
 
+        # Track the currently visible frame
+        self.current_frame = None
+
         # Initialize the frames (pages)
         self.create_frames()
 
@@ -59,12 +62,23 @@ class App(ctk.CTk):
             if hasattr(frame, 'update_with_student_data'):
                 frame.update_with_student_data(self.student_data)
 
+        # Track the current frame being shown
+        self.current_frame = frame_name
+
+
+        # Trigger frame-specific processes
+        if frame_name == "homepage":
+            self.pages["homepage"].scan_rfid()  # Start scanning RFID when homepage is shown
+        elif frame_name == "dispose_waste":
+            self.pages["dispose_waste"].detect_object()  # Run object detection for dispose_waste
+            # TODO: Implement the object detection method in DisposeWaste
+
         # Show the requested frame
         frame.grid(row=0, column=0, sticky="nsew")
 
 if __name__ == "__main__":
     # Initialize customtkinter appearance
-    ctk.set_appearance_mode("dark")
+    ctk.set_appearance_mode("light")
     ctk.set_default_color_theme("blue")
 
     app = App()

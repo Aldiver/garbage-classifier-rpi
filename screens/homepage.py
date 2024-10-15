@@ -13,6 +13,10 @@ class HomePage(ctk.CTkFrame):
 
         # Store the navigation callback
         self.navigate_callback = navigate_callback
+        self.stop_scanning = False  # Flag to control the scanning thread
+
+        # Find the RFID port upon instantiation
+        self.port = self.find_rfid_port()
 
         # Layout configuration
         self.grid_rowconfigure(0, weight=1)
@@ -26,8 +30,17 @@ class HomePage(ctk.CTkFrame):
         self.scan_text = ctk.CTkLabel(self.frame, text="Scan your RFID", font=("Arial", 24), bg_color="black", fg_color="white")
         self.scan_text.pack(pady=20)
 
-        # Start RFID scanning in a separate thread
+        # Start RFID scanning when the homepage is loaded
+        self.start_rfid_scanning()
+
+    def start_rfid_scanning(self):
+        """Start the RFID scanning in a separate thread."""
+        self.stop_scanning = False  # Reset the stop flag
         threading.Thread(target=self.scan_rfid, daemon=True).start()
+
+    def stop_rfid_scanning(self):
+        """Stop the RFID scanning loop."""
+        self.stop_scanning = True
 
     def find_rfid_port(self):
         """Check if the HID device is available. This method is for demonstration purposes."""
@@ -40,42 +53,38 @@ class HomePage(ctk.CTkFrame):
 
     def scan_rfid(self):
         """Function to scan RFID, send data to the server, and handle response."""
-        # Find the correct port for the RFID scanner
-        port = self.find_rfid_port()
-
-        if port:
+        if self.port:  # Ensure the port was found during instantiation
             try:
-                # Open the HID device for reading
-                with open(port, 'rb') as f:
+                with open(self.port, 'rb') as f:
                     test_sent = False  # Flag to check if test RFID was sent
                     start_time = time.time()  # Record the start time
-                    rfid = False
-                    while True:
+                    rfid = False  # Placeholder for RFID data
+
+                    while not self.stop_scanning:  # Loop until stop_scanning is set to True
                         print(time.time())
-                        # Check if 5 seconds have passed to send the test RFID
+
+                        # Send a test RFID after 5 seconds
                         if not test_sent and (time.time() - start_time >= 5):
                             self.send_rfid_to_server("12346579")  # Send test RFID
-                            test_sent = True  # Set the flag to indicate test RFID was sent
+                            test_sent = True  # Test RFID has been sent
 
+                        # Simulate RFID reading
                         # rfid_data = f.read(8)  # Adjust based on the expected length of the RFID
                         # rfid = rfid_data.decode('utf-8', errors='ignore').strip()
 
                         # Check if an RFID was read
                         if rfid:
                             print(f"RFID Read: {rfid}")
-                            # Wait for the RFID scan to finish before sending
                             time.sleep(0.5)  # Add a delay to ensure the scan is complete
                             self.send_rfid_to_server(rfid)
 
             except Exception as e:
                 self.show_error_modal(f"Error reading RFID scanner: {e}")
         else:
-            # Fallback case if RFID scanner is not found
             self.show_error_modal("RFID scanner not found.")
 
     def send_rfid_to_server(self, rfid):
         """Send the RFID data to the server and process the response."""
-        # Append the RFID path to the base URL
         url = f"{API_URL}/rfid/{rfid}"
 
         try:
@@ -83,12 +92,17 @@ class HomePage(ctk.CTkFrame):
             if response.status_code == 200:
                 data = response.json()
                 student = data.get('student')
-                # Show success modal and pass the student data to the callback
+
+                # RFID found, stop scanning and show success
                 self.show_success_modal("RFID found!", student)
+                self.stop_rfid_scanning()  # Stop scanning once RFID is processed
+
             else:
+                # No student found, continue scanning
                 self.show_error_modal("No student record found")
 
         except requests.RequestException as e:
+            # Server error, continue scanning
             self.show_error_modal(f"Error contacting server: {e}")
 
     def show_success_modal(self, message, student):
