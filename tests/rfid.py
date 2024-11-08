@@ -1,23 +1,25 @@
-from evdev import InputDevice, ecodes
+import hid
+import time
 
 def read_rfid_device(device_path='/dev/hidraw0'):
-    device = InputDevice(device_path)
-    print(f"Opened device: {device}")
+    # Open the HID device
+    try:
+        h = hid.device()
+        h.open_path(device_path)
+        print(f"Opened device: {device_path}")
 
-    # Wait for RFID scan
-    print("Waiting for RFID scan...")
-    while True:
-        try:
-            for event in device.read():
-                if event.type == ecodes.EV_KEY and event.value == 1:  # Key press event
-                    print(f"Scanned RFID: {event}")
-        except OSError as e:
-            if e.errno == 11:  # Resource temporarily unavailable
-                print("Device temporarily unavailable, retrying...")
-                time.sleep(1)  # Retry after 1 second
-                continue
-            print(f"Error reading from device: {e}")
-            break
+        print("Waiting for RFID scan...")
+        while True:
+            # Read from the device
+            data = h.read(64)  # Read up to 64 bytes (size may vary)
+            if data:
+                # Process data
+                print("Scanned RFID:", data)
+                # Here you would decode or process the RFID data
+                # For example, if it's in a particular format, decode it
+
+    except Exception as e:
+        print(f"Error reading from device: {e}")
 
 if __name__ == "__main__":
-    read_rfid_device()
+    read_rfid_device('/dev/hidraw0')
