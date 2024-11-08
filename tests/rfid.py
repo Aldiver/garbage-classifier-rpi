@@ -8,7 +8,7 @@ pprint = pprint
 reader = "Sycreader RFID Technology Co., Ltd SYC ID&IC USB Reader"
 
 # Initialize the device and authcode list
-device = None
+device = evdev.InputDevice
 authcode = []
 rfid_number = ""  # Variable to store the entire RFID number
 
