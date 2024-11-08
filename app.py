@@ -31,7 +31,7 @@ class App(ctk.CTk):
         self.create_frames()
 
         # Show the homepage initially
-        self.show_frame("main_menu")
+        self.show_frame("homepage")
 
     def create_frames(self):
         all_users = [(f"User{i}", random.randint(1, 100)) for i in range(1, 101)]
