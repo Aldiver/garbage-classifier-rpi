@@ -52,37 +52,39 @@ class HomePage(ctk.CTkFrame):
                 return device.device_node
         return None
 
-    def scan_rfid(self):
-        """Function to scan RFID, send data to the server, and handle response."""
-        if self.port:  # Ensure the port was found during instantiation
-            try:
-                with open(self.port, 'rb') as f:
-                    test_sent = False  # Flag to check if test RFID was sent
-                    start_time = time.time()  # Record the start time
-                    rfid = False  # Placeholder for RFID data
+def scan_rfid(self):
+    """Function to scan RFID, send data to the server, and handle response."""
+    if self.port:  # Ensure the port was found during instantiation
+        try:
+            with open(self.port, 'rb') as f:
+                test_sent = False  # Flag to check if test RFID was sent
+                start_time = time.time()  # Record the start time
+                rfid = ""  # Placeholder for RFID data
 
-                    while not self.stop_scanning:  # Loop until stop_scanning is set to True
-                        print(time.time())
+                while not self.stop_scanning:  # Loop until stop_scanning is set to True
+                    # Send a test RFID after 5 seconds
+                    # if not test_sent and (time.time() - start_time >= 5):
+                        # self.send_rfid_to_server("12346579")  # Send test RFID
+                        # test_sent = True  # Test RFID has been sent
 
-                        # Send a test RFID after 5 seconds
-                        if not test_sent and (time.time() - start_time >= 5):
-                            # self.send_rfid_to_server("12346579")  # Send test RFID
-                            test_sent = True  # Test RFID has been sent
+                    # Read a chunk of data from the RFID reader
+                    rfid_data = f.read(1).decode('utf-8', errors='ignore')  # Read one byte at a time
+                    rfid += rfid_data  # Append to the RFID buffer
 
-                        # Simulate RFID reading
-                        rfid_data = f.read(8)  # Adjust based on the expected length of the RFID
-                        rfid = rfid_data.decode('utf-8', errors='ignore').strip()
-
-                        # Check if an RFID was read
-                        if rfid:
+                    # Check if the RFID data ends with a newline (indicating scan completion)
+                    if rfid.endswith('\n'):
+                        rfid = rfid.strip()  # Remove any whitespace and newline characters
+                        if rfid:  # If we have valid RFID data
                             print(f"RFID Read: {rfid}")
-                            time.sleep(0.5)  # Add a delay to ensure the scan is complete
+                            time.sleep(0.5)  # Delay to allow scan completion
                             self.send_rfid_to_server(rfid)
+                        rfid = ""  # Reset RFID buffer for the next read
 
-            except Exception as e:
-                self.show_error_modal(f"Error reading RFID scanner: {e}")
-        else:
-            self.show_error_modal("RFID scanner not found.")
+        except Exception as e:
+            self.show_error_modal(f"Error reading RFID scanner: {e}")
+    else:
+        self.show_error_modal("RFID scanner not found.")
+
 
     def send_rfid_to_server(self, rfid):
         """Send the RFID data to the server and process the response."""
