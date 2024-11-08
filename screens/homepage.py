@@ -47,12 +47,12 @@ class HomePage(ctk.CTkFrame):
         """Check if the RFID event device is available."""
         context = pyudev.Context()
         for device in context.list_devices(subsystem='input'):
-            # Check if the device is an event device (e.g., /dev/input/event5)
-            if device.device_node.startswith('/dev/input/event'):
-                print(f"Checking device: {device.device_node}")
-                # Optionally, you can add additional checks to verify if it's the correct RFID reader
-                if device.device_node == '/dev/input/event5':  # Replace with the correct event device path
-                    return device.device_node
+            device_node = device.device_node
+            if device_node and device_node.startswith('/dev/input/event'):
+                print(f"Checking device: {device_node}")
+                # Check if the device is the RFID reader by matching the device path
+                if device_node == '/dev/input/event5':  # Replace with your event device path
+                    return device_node
         return None
 
     def scan_rfid(self):
