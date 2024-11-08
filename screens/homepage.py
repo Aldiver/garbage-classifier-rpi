@@ -2,10 +2,6 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
 import requests
-import threading
-import customtkinter as ctk
-from tkinter import messagebox
-import threading
 from utils.rfid_util import scan_rfid
 from utils.utils import API_URL
 
@@ -16,7 +12,7 @@ class HomePage(ctk.CTkFrame):
 
         # Store the navigation callback
         self.navigate_callback = navigate_callback
-        self.stop_scanning = False  # Flag to control the scanning thread
+        self.stop_scanning = False  # Flag to control the scanning loop
 
         # Layout configuration
         self.grid_rowconfigure(0, weight=1)
@@ -32,24 +28,25 @@ class HomePage(ctk.CTkFrame):
 
         # Start RFID scanning when the homepage is loaded
         self.start_rfid_scanning()
+    def read_rfid(self):
+        """Scan the RFID and handle the process without blocking the main UI."""
+        if not self.stop_scanning:
+            rfid_number = scan_rfid()  # Call the utility function to scan RFID
+            if rfid_number:
+                print(f"Scanned RFID Number: {rfid_number}")
+                self.send_rfid_to_server(rfid_number)
+            else:
+                # If no RFID is scanned, try again after 1 second
+                self.after(1000, self.scan_rfid)  # Check again in 1 second
 
     def start_rfid_scanning(self):
-        """Start the RFID scanning in a separate thread."""
+        """Start the RFID scanning without threading, using after method."""
         self.stop_scanning = False  # Reset the stop flag
-        self.scan_rfid_thread()
+        self.read_rfid()  # Call the scan_rfid method directly
 
     def stop_rfid_scanning(self):
         """Stop the RFID scanning loop."""
         self.stop_scanning = True
-
-    def scan_rfid_thread(self):
-        """Scan the RFID in a separate thread."""
-        while not self.stop_scanning:
-            rfid_number = scan_rfid()  # Call the utility function to scan RFID
-            if rfid_number:
-                print(f"Scanned RFID Number: {rfid_number}")
-                self.stop_rfid_scanning()
-                self.send_rfid_to_server(rfid_number)
 
     def send_rfid_to_server(self, rfid):
         """Send the RFID data to the server and process the response."""
@@ -64,7 +61,6 @@ class HomePage(ctk.CTkFrame):
 
                 # RFID found, stop scanning and show success
                 self.show_success_modal("RFID found!", student)
-                self.stop_rfid_scanning()  # Stop scanning once RFID is processed
 
             else:
                 # No student found, prompt to add a new student
