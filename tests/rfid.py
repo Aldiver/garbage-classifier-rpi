@@ -27,7 +27,7 @@ def mapInput(inputEventArray):
     # pprint(inputEventArray)
     for event in inputEventArray:
 
-        if event.code is not 28:
+        if event.code != 28:
             input+=str(conversionTable[event.code])
     return input
 
