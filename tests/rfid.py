@@ -52,5 +52,5 @@ for event in device.read_loop():
     if(len(authcode)):
 
         input = mapInput(authcode)
-        pprint(input)
+        print(input)
         authcode = []
