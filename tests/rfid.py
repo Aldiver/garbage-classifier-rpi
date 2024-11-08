@@ -1,18 +1,34 @@
-from evdev import InputDevice, ecodes, list_devices
-from select import select
+import time
+from evdev import InputDevice, ecodes
 
-keys = "X^1234567890XXXXqwertzuiopXXXXasdfghjklXXXXXyxcvbnmXXXXXXXXXXXXXXXXXXXXXXX"
-dev = InputDevice("/dev/input/by-id/usb-Sycreader_RFID_Technology_Co.__Ltd_SYC_ID_IC_USB_Reader_08FF20140315-event-kbd")
+def read_rfid_from_device(device_path):
+    """Read RFID tag from the device."""
+    try:
+        # Open the device
+        dev = InputDevice(device_path)
+        print(f"Opened device: {dev}")
 
-barcode = ""
-while True:
-    r,w,x = select([dev], [], [])
+        # Loop to capture events
+        print("Waiting for RFID scan...")
+        while True:
+            for event in dev.read():
+                # Check if the event is a key press
+                if event.type == ecodes.EV_KEY:
+                    key_event = ecodes.KEY[event.code]
+                    if event.value == 1:  # key down event
+                        print(f"Key pressed: {key_event}")
 
-    for event in dev.read():
-        if event.type != 1 or event.value != 1:
-            continue
-        if event.code == 28:
-            print(barcode)
-            barcode = ""
-            break
-        barcode += keys[event.code]
+                        # Process RFID scan here (e.g., print scanned tag or trigger a function)
+                        if key_event == 'KEY_ENTER':
+                            print("RFID scan completed!")
+                            # Stop the loop or handle the scanned RFID
+                            return
+            time.sleep(0.1)
+
+    except Exception as e:
+        print(f"Error reading from device: {e}")
+
+if __name__ == "__main__":
+    # The device is detected at /dev/input/event5 for your Sycreader
+    rfid_device_path = '/dev/input/event5'
+    read_rfid_from_device(rfid_device_path)
