@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 import time
 from tfprocess import detect  # Adjust path if needed
 
-from utils.ir_util import is_object_close, sensor1, sensor2, sensor3
+from utils.ir_util import get_sensor_value, sensor1, sensor2, sensor3
 from utils.servo_util import move_servo
 from utils.ultrasonic_util import get_distance, calculate_bin_level
 
