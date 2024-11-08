@@ -8,8 +8,9 @@ pprint = pprint
 reader = "Sycreader RFID Technology Co., Ltd SYC ID&IC USB Reader"
 
 # Initialize the device and authcode list
-device = evdev.InputDevice
+device = None
 authcode = []
+rfid_number = ""  # Variable to store the entire RFID number
 
 # Conversion table to map evdev key codes to characters (adding "Enter" for the return key)
 conversionTable = {
@@ -58,10 +59,17 @@ for event in device.read_loop():
         if event.value == 1:
             # Add the event to the authcode list
             authcode.append(event)
+
         # When key is released (value = 0)
         elif event.value == 0:
             # Process the input if there are any collected key events
             if len(authcode) > 0:
                 input_str = mapInput(authcode)
-                print(f"Scanned RFID Input: {input_str}")
+                rfid_number += input_str  # Append the input to rfid_number
                 authcode = []  # Reset the authcode list after processing
+
+            # Check if "Enter" key (28) is pressed, indicating end of input
+            if event.code == 28 and event.value == 1:
+                # Display the complete RFID number
+                print(f"Scanned RFID Number: {rfid_number}")
+                rfid_number = ""  # Reset rfid_number for the next scan
