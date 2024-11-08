@@ -6,7 +6,7 @@ import threading
 import customtkinter as ctk
 from tkinter import messagebox
 import threading
-from utils.rfid_util import scan_rfid  # Import the scan_rfid function
+from utils.rfid_util import scan_rfid
 from utils.utils import API_URL
 
 
@@ -36,7 +36,7 @@ class HomePage(ctk.CTkFrame):
     def start_rfid_scanning(self):
         """Start the RFID scanning in a separate thread."""
         self.stop_scanning = False  # Reset the stop flag
-        threading.Thread(target=self.scan_rfid_thread, daemon=True).start()
+        self.scan_rfid_thread()
 
     def stop_rfid_scanning(self):
         """Stop the RFID scanning loop."""
@@ -48,6 +48,7 @@ class HomePage(ctk.CTkFrame):
             rfid_number = scan_rfid()  # Call the utility function to scan RFID
             if rfid_number:
                 print(f"Scanned RFID Number: {rfid_number}")
+                self.stop_rfid_scanning()
                 self.send_rfid_to_server(rfid_number)
 
     def send_rfid_to_server(self, rfid):

@@ -66,7 +66,6 @@ class App(ctk.CTk):
         # Track the current frame being shown
         self.current_frame = frame_name
 
-
         # Trigger frame-specific processes
         # if frame_name == "homepage":
         #     self.pages["homepage"].scan_rfid()  # Start scanning RFID when homepage is shown

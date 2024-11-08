@@ -44,6 +44,7 @@ def scan_rfid():
     global device, rfid_number, authcode
     device = find_rfid_device()
     if device is None:
+        print("No Device")
         return None
 
     rfid_number = ""  # Reset the RFID number
