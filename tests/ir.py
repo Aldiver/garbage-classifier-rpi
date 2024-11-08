@@ -6,7 +6,7 @@ from adafruit_ads1x15.analog_in import AnalogIn
 
 # Set up I2C bus and ADS1115
 i2c = busio.I2C(board.SCL, board.SDA)
-ads = ADS.ADS1115(i2c)
+ads = ADS.ADS1115(i2c, address=0x4A)
 
 # Configure ADS1115 with default gain (adjust if needed)
 ads.gain = 1

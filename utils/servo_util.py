@@ -1,17 +1,14 @@
-import board
-import busio
-from adafruit_pca9685 import PCA9685
+import time
+from adafruit_servokit import ServoKit
 
-i2c = busio.I2C(board.SCL, board.SDA)
-pca = PCA9685(i2c)
-pca.frequency = 50  # Set frequency to 50Hz for servos
+# Set up the ServoKit instance with 16 channels (this supports up to 16 servos)
+kit = ServoKit(channels=16)
 
+# Helper function to set servo angle using ServoKit
 def set_servo_angle(channel, angle):
-    pulse_min = 1000
-    pulse_max = 2000
-    pulse_width = pulse_min + (angle / 180.0) * (pulse_max - pulse_min)
-    pulse_length = int(pulse_width / 1000000 * pca.frequency * 4096)
-    pca.channels[channel].duty_cycle = pulse_length
+    # Use ServoKit to set the servo angle
+    kit.servo[channel].angle = angle
+    print(f"Servo {channel} set to {angle} degrees")
 
 def move_servo(channel, angle):
     set_servo_angle(channel, angle)
