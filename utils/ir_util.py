@@ -12,7 +12,5 @@ sensor1 = AnalogIn(ads, ADS.P0)  # A0
 sensor2 = AnalogIn(ads, ADS.P1)  # A1
 sensor3 = AnalogIn(ads, ADS.P2)  # A2
 
-def is_object_close(sensor, threshold=0.3):
-    """Returns True if an object is close, based on voltage."""
-    voltage = sensor.voltage
-    return voltage >= threshold  # Adjust threshold based on sensor's output for 1ft proximity
+def get_sensor_value(sensor, threshold=0.5):
+    return sensor.voltage
