@@ -1,18 +1,21 @@
 import board
 import busio
-import adafruit_ads1x15.ads1115 as ADS
-from adafruit_ads1x15.analog_in import AnalogIn
+from adafruit_pca9685 import PCA9685
 
+# Initialize I2C bus
 i2c = busio.I2C(board.SCL, board.SDA)
-ads = ADS.ADS1115(i2c)
-ads.gain = 1  # Adjust gain as needed
 
-# IR sensors
-sensor1 = AnalogIn(ads, ADS.P0)  # A0
-sensor2 = AnalogIn(ads, ADS.P1)  # A1
-sensor3 = AnalogIn(ads, ADS.P2)  # A2
+# Set the address to 0x40 or 0x70
+# Change address based on your configuration
+pca = PCA9685(i2c, address=0x70)  # Use 0x40 or 0x70 based on your device
+pca.frequency = 50  # Set frequency to 50Hz for servos
 
-def is_object_close(sensor, threshold=0.3):
-    """Returns True if an object is close, based on voltage."""
-    voltage = sensor.voltage
-    return voltage >= threshold  # Adjust threshold based on sensor's output for 1ft proximity
+def set_servo_angle(channel, angle):
+    pulse_min = 1000
+    pulse_max = 2000
+    pulse_width = pulse_min + (angle / 180.0) * (pulse_max - pulse_min)
+    pulse_length = int(pulse_width / 1000000 * pca.frequency * 4096)
+    pca.channels[channel].duty_cycle = pulse_length
+
+def move_servo(channel, angle):
+    set_servo_angle(channel, angle)
