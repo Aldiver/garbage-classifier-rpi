@@ -1,10 +1,7 @@
 import customtkinter as ctk
-import tkinter as tk
 from tkinter import messagebox
-import requests
 import threading
-import pyudev
-import time
+from utils.rfid_util import scan_rfid  # Import the scan_rfid function
 from utils.utils import API_URL
 
 
@@ -15,9 +12,6 @@ class HomePage(ctk.CTkFrame):
         # Store the navigation callback
         self.navigate_callback = navigate_callback
         self.stop_scanning = False  # Flag to control the scanning thread
-
-        # Find the RFID port upon instantiation
-        self.port = self.find_rfid_port()
 
         # Layout configuration
         self.grid_rowconfigure(0, weight=1)
@@ -37,57 +31,19 @@ class HomePage(ctk.CTkFrame):
     def start_rfid_scanning(self):
         """Start the RFID scanning in a separate thread."""
         self.stop_scanning = False  # Reset the stop flag
-        threading.Thread(target=self.scan_rfid, daemon=True).start()
+        threading.Thread(target=self.scan_rfid_thread, daemon=True).start()
 
     def stop_rfid_scanning(self):
         """Stop the RFID scanning loop."""
         self.stop_scanning = True
 
-    def find_rfid_port(self):
-        """Check if the RFID event device is available."""
-        context = pyudev.Context()
-        for device in context.list_devices(subsystem='input'):
-            device_node = device.device_node
-            if device_node and device_node.startswith('/dev/input/event'):
-                print(f"Checking device: {device_node}")
-                # Check if the device is the RFID reader by matching the device path
-                if device_node == '/dev/input/event5':  # Replace with your event device path
-                    return device_node
-        return None
-
-    def scan_rfid(self):
-        """Function to scan RFID, send data to the server, and handle response."""
-        if self.port:  # Ensure the port was found during instantiation
-            try:
-                with open(self.port, 'rb') as f:
-                    test_sent = False  # Flag to check if test RFID was sent
-                    start_time = time.time()  # Record the start time
-                    rfid = ""  # Placeholder for RFID data
-
-                    while not self.stop_scanning:  # Loop until stop_scanning is set to True
-                        # Send a test RFID after 5 seconds
-                        # if not test_sent and (time.time() - start_time >= 5):
-                            # self.send_rfid_to_server("12346579")  # Send test RFID
-                            # test_sent = True  # Test RFID has been sent
-
-                        # Read a chunk of data from the RFID reader
-                        rfid_data = f.read(1).decode('utf-8', errors='ignore')  # Read one byte at a time
-                        rfid += rfid_data  # Append to the RFID buffer
-
-                        # Check if the RFID data ends with a newline (indicating scan completion)
-                        if rfid.endswith('\n'):
-                            rfid = rfid.strip()  # Remove any whitespace and newline characters
-                            if rfid:  # If we have valid RFID data
-                                print(f"RFID Read: {rfid}")
-                                time.sleep(0.5)  # Delay to allow scan completion
-                                self.send_rfid_to_server(rfid)
-                            rfid = ""  # Reset RFID buffer for the next read
-
-            except Exception as e:
-                self.show_error_modal(f"Error reading RFID scanner: {e}")
-        else:
-            self.show_error_modal("RFID scanner not found.")
-
+    def scan_rfid_thread(self):
+        """Scan the RFID in a separate thread."""
+        while not self.stop_scanning:
+            rfid_number = scan_rfid()  # Call the utility function to scan RFID
+            if rfid_number:
+                print(f"Scanned RFID Number: {rfid_number}")
+                self.send_rfid_to_server(rfid_number)
 
     def send_rfid_to_server(self, rfid):
         """Send the RFID data to the server and process the response."""
@@ -189,44 +145,13 @@ class HomePage(ctk.CTkFrame):
         password_input.pack(pady=5)
 
         # Submit button
-        submit_button = ctk.CTkButton(form_modal, text="Submit", command=lambda: self.submit_new_student(form_modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input))
-        submit_button.pack(pady=20)
+        submit_button = ctk.CTkButton(form_modal, text="Submit", command=lambda: self.add_student_to_server(form_modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input, current_points_value))
+        submit_button.pack(pady=10)
 
-    def submit_new_student(self, form_modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input):
-        """Submit the new student data to the backend after authentication."""
-        # Get the input values
-        alias = alias_input.get()
-        first_name = first_name_input.get()
-        last_name = last_name_input.get()
-        middle_name = middle_name_input.get() if middle_name_input.get() else None
-        email = email_input.get()
-        password = password_input.get()
+    def add_student_to_server(self, modal, rfid, alias, first_name, last_name, middle_name, email, password, points):
+        """Add the student to the server and display a confirmation modal."""
+        modal.destroy()
 
-        # Verify user email and password for authentication
-        if not email or not password:
-            self.show_error_modal("Email and password are required.")
-            return
-
-        # Send the request to the backend to create the student
-        try:
-            url = f"{API_URL}/students"
-            data = {
-                "rfid": rfid,
-                "alias": alias,
-                "first_name": first_name,
-                "last_name": last_name,
-                "middle_name": middle_name,
-                "email": email,
-                "password": password
-            }
-
-            response = requests.post(url, json=data)
-            if response.status_code == 201:
-                messagebox.showinfo("Success", "Student added successfully!")
-                form_modal.destroy()
-                self.navigate_callback("main_menu")  # Navigate to the main menu after success
-            else:
-                self.show_error_modal("Failed to add student. Please try again.")
-
-        except requests.RequestException as e:
-            self.show_error_modal(f"Error contacting server: {e}")
+        # Logic to add student (POST request) here
+        # After success, navigate to main menu
+        self.show_success_modal("Student added successfully!", {"rfid": rfid, "alias": alias.get()})

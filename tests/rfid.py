@@ -59,7 +59,7 @@ for event in device.read_loop():
             # Add the event to the authcode list
             if(event.code != 28):
                 authcode.append(event)
-            print(f"Key pressed: {event.code}")  # Debugging key press
+            # print(f"Key pressed: {event.code}")  # Debugging key press
 
         # When key is released (value = 0)
         elif event.value == 0:
@@ -67,10 +67,9 @@ for event in device.read_loop():
             if len(authcode) > 0:
                 input_str = mapInput(authcode)
                 rfid_number += input_str  # Append the input to rfid_number
-                print(f"RFID Input so far: {rfid_number}")  # Debugging input so far
+                # print(f"RFID Input so far: {rfid_number}")  # Debugging input so far
                 authcode = []  # Reset the authcode list after processing
 
-            # Check if "Enter" key (28) is pressed, indicating end of input
             if event.code == 28 and event.value == 1:
                 # Display the complete RFID number
                 print(f"Scanned RFID Number: {rfid_number}")
