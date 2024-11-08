@@ -41,6 +41,7 @@ devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
 
 # Loop through devices to find the matching RFID reader
 for dev in devices:
+    print(f"Found device: {dev.name}")  # Debug print for all devices found
     if dev.name == reader:
         device = evdev.InputDevice(dev.path)
 
@@ -53,12 +54,16 @@ print(f"Device '{reader}' found, waiting for RFID scan...")
 
 # Start reading events from the device
 for event in device.read_loop():
+    # Debug print for each event received
+    print(f"Received event: {event}")
+
     # Only process key events (EV_KEY)
     if event.type == evdev.ecodes.EV_KEY:
         # When a key is pressed (value = 1)
         if event.value == 1:
             # Add the event to the authcode list
             authcode.append(event)
+            print(f"Key pressed: {event.code}")  # Debugging key press
 
         # When key is released (value = 0)
         elif event.value == 0:
@@ -66,6 +71,7 @@ for event in device.read_loop():
             if len(authcode) > 0:
                 input_str = mapInput(authcode)
                 rfid_number += input_str  # Append the input to rfid_number
+                print(f"RFID Input so far: {rfid_number}")  # Debugging input so far
                 authcode = []  # Reset the authcode list after processing
 
             # Check if "Enter" key (28) is pressed, indicating end of input
