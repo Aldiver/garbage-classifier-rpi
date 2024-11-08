@@ -31,7 +31,7 @@ class HomePage(ctk.CTkFrame):
         self.scan_text.pack(pady=20)
 
         # Start RFID scanning when the homepage is loaded
-        self.start_rfid_scanning()
+        # self.start_rfid_scanning()
 
     def start_rfid_scanning(self):
         """Start the RFID scanning in a separate thread."""
@@ -214,7 +214,7 @@ class HomePage(ctk.CTkFrame):
                 # Success
                 messagebox.showinfo("Success", "Student added successfully.")
                 form_modal.destroy()  # Close the form after submission
-                self.start_rfid_scanning()  # Restart RFID scanning
+                # self.start_rfid_scanning()  # Restart RFID scanning
 
             else:
                 # Failure
