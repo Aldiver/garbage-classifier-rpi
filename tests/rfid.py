@@ -8,7 +8,7 @@ pprint = pprint
 reader = "Sycreader RFID Technology Co."
 
 # Initialize the device and authcode list
-device = None
+device = evdev.InputDevice
 authcode = []
 
 # Conversion table to map evdev key codes to characters (adding "Enter" for the return key)
@@ -35,18 +35,18 @@ def mapInput(inputEventArray):
             input_str += conversionTable[event.code]
     return input_str
 
-# Get a list of all input devices
-devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+# # Get a list of all input devices
+# devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
 
-# Loop through devices to find the matching RFID reader
-for dev in devices:
-    if dev.name == reader:
-        device = evdev.InputDevice(dev.path)
+# # Loop through devices to find the matching RFID reader
+# for dev in devices:
+#     if dev.name == reader:
+#         device = evdev.InputDevice(dev.path)
 
 # Check if the device is found
-if device is None:
-    print("RFID Reader device not found.")
-    exit()
+# if device is None:
+#     print("RFID Reader device not found.")
+#     exit()
 
 print(f"Device '{reader}' found, waiting for RFID scan...")
 
