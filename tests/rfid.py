@@ -57,7 +57,8 @@ for event in device.read_loop():
         # When a key is pressed (value = 1)
         if event.value == 1:
             # Add the event to the authcode list
-            authcode.append(event)
+            if(event.code != 28):
+                authcode.append(event)
             print(f"Key pressed: {event.code}")  # Debugging key press
 
         # When key is released (value = 0)
