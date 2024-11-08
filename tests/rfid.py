@@ -1,27 +1,34 @@
 import evdev
 
-# Open the device (ensure this matches your device name or path)
-device = evdev.InputDevice('/dev/input/event5')  # Replace with your event path
+# List all available input devices (this will help you identify the correct device path)
+devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+for device in devices:
+    print(f"Found device: {device}")
 
-# Function to filter out unwanted keys like 'Enter'
+# Open the device (use the correct event path from the output above)
+device_path = '/dev/input/event5'  # Replace with your actual event path
+device = evdev.InputDevice(device_path)
+
+# Function to process RFID input and filter out unwanted keys
 def process_rfid_input():
     rfid_input = ""
     for event in device.read_loop():
+        # Print event data for debugging
+        print(f"Received event: {event}")
+
         if event.type == evdev.ecodes.EV_KEY:
-            if event.value == 1:  # Key press
-                key = evdev.ecodes.KEY[event.code]
+            key = evdev.ecodes.KEY[event.code]
+            print(f"Key pressed: {key}")
 
-                # Filter out the 'Enter' key (code 28 or 13) or any other unwanted keys
+            # If key press (value 1), add it to the input string, filter 'Enter' key
+            if event.value == 1:
                 if key != 'KEY_ENTER':
-                    rfid_input += key[-1]  # Get last character of the key string (e.g., '1' from 'KEY_1')
+                    rfid_input += key[-1]  # Get the last character (e.g., '1' from 'KEY_1')
 
-            if event.value == 0:  # Key release
-                pass
-
-        # Stop when 'Enter' (code 28) is pressed
-        if 'KEY_ENTER' in locals() and rfid_input.endswith("Enter"):
-            rfid_input = rfid_input.rstrip('Enter')  # Remove "Enter"
-            break
+            # Stop reading after 'Enter' key (code 28)
+            if event.value == 0 and 'KEY_ENTER' in locals() and rfid_input.endswith("Enter"):
+                rfid_input = rfid_input.rstrip('Enter')  # Remove "Enter"
+                break
 
     return rfid_input
 
