@@ -68,9 +68,9 @@ class App(ctk.CTk):
 
 
         # Trigger frame-specific processes
-        if frame_name == "homepage":
-            self.pages["homepage"].scan_rfid()  # Start scanning RFID when homepage is shown
-        elif frame_name == "dispose_waste":
+        # if frame_name == "homepage":
+        #     self.pages["homepage"].scan_rfid()  # Start scanning RFID when homepage is shown
+        if frame_name == "dispose_waste":
             self.pages["dispose_waste"].detect_object()  # Run object detection for dispose_waste
             # TODO: Implement the object detection method in DisposeWaste
 
