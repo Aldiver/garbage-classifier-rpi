@@ -4,7 +4,7 @@ import tkinter as tk
 
 from screens.check_point import CheckPoints
 from screens.dispose_waste import DisposeWaste
-from screens.homepage import HomePage
+# from screens.homepage import HomePage
 from screens.leaderboards import Leaderboard
 from screens.main_menu import MainMenu
 
@@ -30,14 +30,14 @@ class App(ctk.CTk):
         self.create_frames()
 
         # Show the homepage initially
-        self.show_frame("homepage")
+        self.show_frame("dispose_waste")
 
     def create_frames(self):
         all_users = [(f"User{i}", random.randint(1, 100)) for i in range(1, 101)]
         user_rank = 25
 
         # Create and store each frame, passing the navigation callback
-        self.pages["homepage"] = HomePage(self, self.show_frame)
+        # self.pages["homepage"] = HomePage(self, self.show_frame)
         self.pages["main_menu"] = MainMenu(self, self.show_frame)
         self.pages["check_points"] = CheckPoints(self, self.show_frame, username="", points=0)
         self.pages["leaderboard"] = Leaderboard(self, self.show_frame, user_rank=user_rank, all_users=all_users)

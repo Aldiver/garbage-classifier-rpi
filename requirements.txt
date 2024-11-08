@@ -1,5 +1,2 @@
-tflite-model-make
-setuptools
-wheel
-python3-devel
-cmake
+adafruit-circuitpython-pca9685
+adafruit-circuitpython-ads1x15
