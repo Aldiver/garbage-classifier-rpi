@@ -49,7 +49,7 @@ for event in device.read_loop():
             if event.value == 1:
                 authcode.append(event)
 
-    if(len(authcode) == 11):
+    if(len(authcode)):
 
         input = mapInput(authcode)
         pprint(input)
