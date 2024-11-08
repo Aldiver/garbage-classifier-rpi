@@ -16,22 +16,26 @@ def set_servo_angle(channel, angle):
     pulse_width = pulse_min + (angle / 180.0) * (pulse_max - pulse_min)
     pulse_length = int(pulse_width / 1000000 * pca.frequency * 4096)
     pca.channels[channel].duty_cycle = pulse_length
+    print(f"Servo {channel} set to {angle} degrees (Pulse width: {pulse_length})")
 
 try:
     while True:
         # Move servos to 0 degrees
+        print("Moving servos to 0 degrees...")
         set_servo_angle(0, 0)
         set_servo_angle(4, 0)
         set_servo_angle(8, 0)
         time.sleep(1)
 
         # Move servos to 90 degrees
+        print("Moving servos to 90 degrees...")
         set_servo_angle(0, 90)
         set_servo_angle(4, 90)
         set_servo_angle(8, 90)
         time.sleep(1)
 
         # Move servos to 180 degrees
+        print("Moving servos to 180 degrees...")
         set_servo_angle(0, 180)
         set_servo_angle(4, 180)
         set_servo_angle(8, 180)
@@ -41,3 +45,4 @@ except KeyboardInterrupt:
     print("Program stopped")
 finally:
     pca.deinit()
+    print("PCA9685 deinitialized")
