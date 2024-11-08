@@ -16,29 +16,12 @@ sensor1 = AnalogIn(ads, ADS.P0)  # A0
 sensor2 = AnalogIn(ads, ADS.P1)  # A1
 sensor3 = AnalogIn(ads, ADS.P2)  # A2
 
-# Function to convert voltage to distance using polynomial formula
-def voltage_to_distance(voltage):
-    # Apply the polynomial conversion formula
-    dist = (16.2537 * voltage**4 - 129.893 * voltage**3 +
-            382.268 * voltage**2 - 512.611 * voltage + 301.439)
-    return dist
-
-# Function to read sensor data and convert to distance
+# Function to read sensor data
 def read_sensors():
-    # Read each sensor's voltage
-    voltage1 = sensor1.voltage
-    voltage2 = sensor2.voltage
-    voltage3 = sensor3.voltage
-
-    # Convert voltage to distance
-    distance1 = voltage_to_distance(voltage1)
-    distance2 = voltage_to_distance(voltage2)
-    distance3 = voltage_to_distance(voltage3)
-
-    # Print distance values
-    print("Sensor 1 Distance (A0): {:.2f} m".format(distance1))
-    print("Sensor 2 Distance (A1): {:.2f} m".format(distance2))
-    print("Sensor 3 Distance (A2): {:.2f} m".format(distance3))
+    # Read each sensor's voltage and print values
+    print("Sensor 1 Voltage (A0): {:.2f} V".format(sensor1.voltage))
+    print("Sensor 2 Voltage (A1): {:.2f} V".format(sensor2.voltage))
+    print("Sensor 3 Voltage (A2): {:.2f} V".format(sensor3.voltage))
     print("-" * 30)
 
 try:
