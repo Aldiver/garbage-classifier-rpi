@@ -92,6 +92,7 @@ class HomePage(ctk.CTkFrame):
     def send_rfid_to_server(self, rfid):
         """Send the RFID data to the server and process the response."""
         url = f"{API_URL}/rfid/{rfid}"
+        print(f"Sending request to: {url}")
 
         try:
             response = requests.get(url)
