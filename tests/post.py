@@ -13,5 +13,5 @@ student_data = {
                 "password": "1234567890"
             }
 
-response = requests.post(url, data=student_data)
+response = requests.post(url, json=student_data)
 print(response)
