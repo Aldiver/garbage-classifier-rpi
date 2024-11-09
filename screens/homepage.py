@@ -192,7 +192,7 @@ class HomePage(ctk.CTkFrame):
             if response.status_code == 201:
                 messagebox.showinfo("Success", "Student added successfully!")
                 form_modal.destroy()
-                self.navigate_callback("homepage")  # Navigate to the main menu after success
+                self.navigate_callback("main_menu")  # Navigate to the main menu after success
             else:
                 self.show_error_modal("Failed to add student. Please try again.")
 
