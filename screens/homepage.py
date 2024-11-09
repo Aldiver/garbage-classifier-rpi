@@ -178,6 +178,7 @@ class HomePage(ctk.CTkFrame):
         # Send the request to the backend to create the student
         try:
             url = f"{API_URL}/students"
+            print(f"Sending request to: {url}")
             data = {
                 "rfid": rfid,
                 "alias": alias,
@@ -191,7 +192,6 @@ class HomePage(ctk.CTkFrame):
             response = requests.post(url, json=data)
             if response.status_code == 201:
                 messagebox.showinfo("Success", "Student added successfully!")
-                form_modal.destroy()
                 self.navigate_callback("main_menu")  # Navigate to the main menu after success
             else:
                 self.show_error_modal("Failed to add student. Please try again.")
