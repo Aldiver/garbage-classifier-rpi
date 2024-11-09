@@ -189,7 +189,7 @@ class HomePage(ctk.CTkFrame):
                 "password": password
             }
 
-            response = requests.post(url, json=data)
+            response = requests.post(url, data=data)
             if response.status_code == 201:
                 messagebox.showinfo("Success", "Student added successfully!")
                 self.navigate_callback("main_menu")  # Navigate to the main menu after success
