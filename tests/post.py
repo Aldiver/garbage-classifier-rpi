@@ -4,7 +4,7 @@ from utils.utils import API_URL
 url = f"http://192.168.1.162:8000/api/students"
 
 student_data = {
-                "rfid": 12345678,
+                "rfid": "12345678",
                 "alias": "Al",
                 "first_name": "test",
                 "last_name": "test last name",
