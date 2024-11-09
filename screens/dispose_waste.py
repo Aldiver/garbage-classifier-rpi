@@ -41,48 +41,48 @@ class DisposeWaste(ctk.CTkFrame):
         self.detection_start_time = None
         self.video_feed = None
 
-def success_detection(self):
-    detection_type = self.last_detection
-    sensors = {
-        "Recyclable": (sensor1, 0),
-        "Residual": (sensor2, 1),
-        "Biodegradable": (sensor3, 2)
-    }
+    def success_detection(self):
+        detection_type = self.last_detection
+        sensors = {
+            "Recyclable": (sensor1, 0),
+            "Residual": (sensor2, 1),
+            "Biodegradable": (sensor3, 2)
+        }
 
-    if detection_type in sensors:
-        sensor, bin_index = sensors[detection_type]
+        if detection_type in sensors:
+            sensor, bin_index = sensors[detection_type]
 
-        # Rotate the servo associated with the detected type
-        move_servo(bin_index * 4, 180)
-        time.sleep(0.5)
+            # Rotate the servo associated with the detected type
+            move_servo(bin_index * 4, 180)
+            time.sleep(0.5)
 
-        # Monitor the sensor for a 5-second allowance
-        object_detected = False
-        start_time = time.time()
+            # Monitor the sensor for a 5-second allowance
+            object_detected = False
+            start_time = time.time()
 
-        while time.time() - start_time < 5:
-            if get_sensor_value(sensor) > 0.5:
-                object_detected = True
-                break
-        time.sleep(0.1)  # Small delay to avoid tight loop
+            while time.time() - start_time < 5:
+                if get_sensor_value(sensor) > 0.5:
+                    object_detected = True
+                    break
+            time.sleep(0.1)  # Small delay to avoid tight loop
 
-        # If object detected in the 5-second window
-        if object_detected:
-            move_servo(bin_index * 4, 0)  # Reset servo to 0
-            distance = get_distance(sensor)
-            bin_level = calculate_bin_level(distance)
-            self.bin_labels[bin_index].configure(text=f"Bin {bin_index+1} Level: {bin_level}%")
-            print(f"{detection_type} detected: Bin {bin_index+1} Level: {bin_level}%")
-            # TODO: Add points for successful disposal
+            # If object detected in the 5-second window
+            if object_detected:
+                move_servo(bin_index * 4, 0)  # Reset servo to 0
+                distance = get_distance(sensor)
+                bin_level = calculate_bin_level(distance)
+                self.bin_labels[bin_index].configure(text=f"Bin {bin_index+1} Level: {bin_level}%")
+                print(f"{detection_type} detected: Bin {bin_index+1} Level: {bin_level}%")
+                # TODO: Add points for successful disposal
 
-        else:
-            # If no object was detected, reset servo and navigate to home
-            move_servo(bin_index * 4, 0)  # Reset servo to 0
-            distance = get_distance(sensor)
-            bin_level = calculate_bin_level(distance)
-            self.bin_labels[bin_index].configure(text=f"Bin {bin_index+1} Level: {bin_level}%")
-            print(f"No trash inserted for {detection_type}. Returning to home screen.")
-            # TODO: Display message and navigate to home screen
+            else:
+                # If no object was detected, reset servo and navigate to home
+                move_servo(bin_index * 4, 0)  # Reset servo to 0
+                distance = get_distance(sensor)
+                bin_level = calculate_bin_level(distance)
+                self.bin_labels[bin_index].configure(text=f"Bin {bin_index+1} Level: {bin_level}%")
+                print(f"No trash inserted for {detection_type}. Returning to home screen.")
+                # TODO: Display message and navigate to home screen
 
     def detect_object(self):
         for frame, detection_result in detect.start_detection():
