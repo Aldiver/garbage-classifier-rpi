@@ -14,4 +14,4 @@ student_data = {
             }
 
 response = requests.post(url, json=student_data)
-print(response)
+print(response.text)
