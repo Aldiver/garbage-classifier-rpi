@@ -24,16 +24,16 @@ class DisposeWaste(ctk.CTkFrame):
         self.right_frame = ctk.CTkFrame(self, fg_color="white")
         self.right_frame.grid(row=0, column=1, padx=10, pady=(10, 10), sticky="nsew")
 
-        self.status_label = ctk.CTkLabel(self.left_frame, text="Scanning...", font=("Arial", 36), fg_color="white", bg_color="black")
+        self.status_label = ctk.CTkLabel(self.left_frame, text="Scanning...", font=("Arial", 36), bg_color="black", fg_color="white")
         self.status_label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
-        self.detection_label = ctk.CTkLabel(self.right_frame, text="", font=("Arial", 24), fg_color="black", bg_color="white")
+        self.detection_label = ctk.CTkLabel(self.right_frame, text="n/a", font=("Arial", 24), fg_color="black", bg_color="white")
         self.detection_label.pack(pady=20)
 
         # Bin level display, defaulted to 0%
         self.bin_labels = []
         for i in range(3):
-            label = ctk.CTkLabel(self.right_frame, text=f"Bin {i+1} Level: 0%", font=("Arial", 16), fg_color="black", bg_color="white")
+            label = ctk.CTkLabel(self.right_frame, text=f"Bin {i+1} Level: 0%", font=("Arial", 16), bg_color="black", fg_color="white")
             label.pack()
             self.bin_labels.append(label)
 
