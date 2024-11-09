@@ -150,25 +150,21 @@ class HomePage(ctk.CTkFrame):
         submit_button = ctk.CTkButton(
             form_modal, text="Submit",
             command=lambda: self.add_student_to_server(
-                form_modal, rfid, alias_input, first_name_input,
-                last_name_input, middle_name_input, email_input,
-                password_input
-                # current_points_value
+                form_modal, rfid,
+                alias_input.get(),
+                first_name_input.get(),
+                last_name_input.get(),
+                middle_name_input.get() if middle_name_input.get() else None,
+                email_input.get(),
+                password_input.get()
             )
         )
+
         submit_button.grid(row=8, column=0, columnspan=2, pady=(20, 10))
 
-    def add_student_to_server(self, modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input):
+    def add_student_to_server(self, modal, rfid, alias, first_name, last_name, middle_name, email, password):
         """Submit the new student data to the backend after authentication."""
         modal.destroy()
-
-        # Get the input values
-        alias = alias_input.get()
-        first_name = first_name_input.get()
-        last_name = last_name_input.get()
-        middle_name = middle_name_input.get() if middle_name_input.get() else None
-        email = email_input.get()
-        password = password_input.get()
 
         # Verify user email and password for authentication
         if not email or not password:
