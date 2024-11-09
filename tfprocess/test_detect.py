@@ -57,7 +57,7 @@ def run(model: str, camera_id: int, width: int, height: int, num_threads: int,
   base_options = core.BaseOptions(
       file_name=model, use_coral=enable_edgetpu, num_threads=num_threads)
   detection_options = processor.DetectionOptions(
-      max_results=1, score_threshold=0.7)
+      max_results=1, score_threshold=0.3)
   options = vision.ObjectDetectorOptions(
       base_options=base_options, detection_options=detection_options)
   detector = vision.ObjectDetector.create_from_options(options)
@@ -82,10 +82,26 @@ def run(model: str, camera_id: int, width: int, height: int, num_threads: int,
     # Run object detection estimation using the model.
     detection_result = detector.detect(input_tensor)
 
+    if detection_result.detections:
+      print("Detection Results:")
+
+    # Loop through the detected objects
+    for detection in detection_result.detections:
+        # Each detection has a list of categories (classification results)
+        for category in detection.categories:
+            # Get the label (class name) and score (confidence)
+            formattedClassOutput = category.category_name
+            confidence = category.score
+
+            # Print the detected class and confidence score
+            print(f"Detected class: {formattedClassOutput}, Confidence: {confidence:.2f}")
+    else:
+      print("No objects detected.")
+
+    # print(detection_result[0].Detection.Categories.class_name)
     # Draw keypoints and edges on input image
     image = utils.visualize(image, detection_result)
-    for detection in detection_result.detections:
-      print(detection.label)
+
     # Calculate the FPS
     if counter % fps_avg_frame_count == 0:
       end_time = time.time()

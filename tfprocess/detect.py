@@ -14,10 +14,18 @@ def start_detection():
     enable_edgetpu = False
 
     # Initialize the object detection model
-    base_options = core.BaseOptions(file_name=model_path, use_coral=enable_edgetpu, num_threads=num_threads)
-    detection_options = processor.DetectionOptions(max_results=1, score_threshold=0.7)
-    options = vision.ObjectDetectorOptions(base_options=base_options, detection_options=detection_options)
+    base_options = core.BaseOptions(
+      file_name=model_path, use_coral=enable_edgetpu, num_threads=num_threads)
+    detection_options = processor.DetectionOptions(
+      max_results=1, score_threshold=0.7)
+    options = vision.ObjectDetectorOptions(
+      base_options=base_options, detection_options=detection_options)
     detector = vision.ObjectDetector.create_from_options(options)
+
+    # base_options = core.BaseOptions(file_name=model_path, use_coral=enable_edgetpu, num_threads=num_threads)
+    # detection_options = processor.DetectionOptions(max_results=1, score_threshold=0.7)
+    # options = vision.ObjectDetectorOptions(base_options=base_options, detection_options=detection_options)
+    # detector = vision.ObjectDetector.create_from_options(options)
 
     # Start capturing video
     cap = cv2.VideoCapture(camera_id)
