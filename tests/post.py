@@ -1,7 +1,7 @@
 import requests
 from utils.utils import API_URL
 
-url = f"http://192.168.1.162:8000/api/students"
+url = f"{API_URL}/students"
 
 student_data = {
                 "rfid": "12345678",
