@@ -188,8 +188,8 @@ class HomePage(ctk.CTkFrame):
                 "email": email,
                 "password": password
             }
-
-            response = requests.post(url, data=student_data)
+            print(student_data)
+            response = requests.post(url, json=student_data)
             print(response)
             if response.status_code == 201:
                 messagebox.showinfo("Success", "Student added successfully!")
