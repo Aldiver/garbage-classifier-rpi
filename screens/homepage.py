@@ -95,52 +95,56 @@ class HomePage(ctk.CTkFrame):
         # Create a new modal for adding the student
         form_modal = ctk.CTkToplevel(self)
         form_modal.title("Add Student")
-        form_modal.geometry("400x500")
+        form_modal.geometry("400x450")  # Adjust modal size if needed
+
+        # Configure grid layout with padding
+        form_modal.columnconfigure(0, weight=1)
+        form_modal.columnconfigure(1, weight=1)
 
         # Input fields
         rfid_label = ctk.CTkLabel(form_modal, text="RFID:")
-        rfid_label.pack(pady=5)
+        rfid_label.grid(row=0, column=0, sticky="w", padx=(20, 10), pady=(10, 5))
         rfid_input = ctk.CTkEntry(form_modal)
         rfid_input.insert(0, rfid)  # Insert RFID value
         rfid_input.configure(state="readonly")  # Make the field readonly
-        rfid_input.pack(pady=5)
+        rfid_input.grid(row=0, column=1, padx=(10, 20), pady=(10, 5))
 
         alias_label = ctk.CTkLabel(form_modal, text="Alias:")
-        alias_label.pack(pady=5)
+        alias_label.grid(row=1, column=0, sticky="w", padx=(20, 10), pady=(5, 5))
         alias_input = ctk.CTkEntry(form_modal)
-        alias_input.pack(pady=5)
+        alias_input.grid(row=1, column=1, padx=(10, 20), pady=(5, 5))
 
         first_name_label = ctk.CTkLabel(form_modal, text="First Name:")
-        first_name_label.pack(pady=5)
+        first_name_label.grid(row=2, column=0, sticky="w", padx=(20, 10), pady=(5, 5))
         first_name_input = ctk.CTkEntry(form_modal)
-        first_name_input.pack(pady=5)
+        first_name_input.grid(row=2, column=1, padx=(10, 20), pady=(5, 5))
 
         last_name_label = ctk.CTkLabel(form_modal, text="Last Name:")
-        last_name_label.pack(pady=5)
+        last_name_label.grid(row=3, column=0, sticky="w", padx=(20, 10), pady=(5, 5))
         last_name_input = ctk.CTkEntry(form_modal)
-        last_name_input.pack(pady=5)
+        last_name_input.grid(row=3, column=1, padx=(10, 20), pady=(5, 5))
 
         middle_name_label = ctk.CTkLabel(form_modal, text="Middle Name (optional):")
-        middle_name_label.pack(pady=5)
+        middle_name_label.grid(row=4, column=0, sticky="w", padx=(20, 10), pady=(5, 5))
         middle_name_input = ctk.CTkEntry(form_modal)
-        middle_name_input.pack(pady=5)
+        middle_name_input.grid(row=4, column=1, padx=(10, 20), pady=(5, 5))
 
         # Default value for current points
-        current_points_label = ctk.CTkLabel(form_modal, text="Current Points:")
-        current_points_label.pack(pady=5)
-        current_points_value = ctk.CTkLabel(form_modal, text="0")
-        current_points_value.pack(pady=5)
+        # current_points_label = ctk.CTkLabel(form_modal, text="Current Points:")
+        # current_points_label.grid(row=5, column=0, sticky="w", padx=(20, 10), pady=(5, 5))
+        # current_points_value = ctk.CTkLabel(form_modal, text="0")
+        # current_points_value.grid(row=5, column=1, padx=(10, 20), pady=(5, 5))
 
         # Email and password fields for authentication
         email_label = ctk.CTkLabel(form_modal, text="Email:")
-        email_label.pack(pady=5)
+        email_label.grid(row=6, column=0, sticky="w", padx=(20, 10), pady=(5, 5))
         email_input = ctk.CTkEntry(form_modal)
-        email_input.pack(pady=5)
+        email_input.grid(row=6, column=1, padx=(10, 20), pady=(5, 5))
 
         password_label = ctk.CTkLabel(form_modal, text="Password:")
-        password_label.pack(pady=5)
+        password_label.grid(row=7, column=0, sticky="w", padx=(20, 10), pady=(5, 5))
         password_input = ctk.CTkEntry(form_modal, show="*")
-        password_input.pack(pady=5)
+        password_input.grid(row=7, column=1, padx=(10, 20), pady=(5, 5))
 
         # Submit button
         submit_button = ctk.CTkButton(
@@ -148,10 +152,11 @@ class HomePage(ctk.CTkFrame):
             command=lambda: self.add_student_to_server(
                 form_modal, rfid, alias_input, first_name_input,
                 last_name_input, middle_name_input, email_input,
-                password_input, current_points_value
+                password_input
+                # current_points_value
             )
         )
-        submit_button.pack(pady=10)
+        submit_button.grid(row=8, column=0, columnspan=2, pady=(20, 10))
 
     def add_student_to_server(self, form_modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input):
         """Submit the new student data to the backend after authentication."""
@@ -187,7 +192,7 @@ class HomePage(ctk.CTkFrame):
             if response.status_code == 201:
                 messagebox.showinfo("Success", "Student added successfully!")
                 form_modal.destroy()
-                self.navigate_callback("main_menu")  # Navigate to the main menu after success
+                self.navigate_callback("homepage")  # Navigate to the main menu after success
             else:
                 self.show_error_modal("Failed to add student. Please try again.")
 
