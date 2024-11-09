@@ -88,7 +88,12 @@ class DisposeWaste(ctk.CTkFrame):
         for frame, detection_result in detect.start_detection():
             self.update_camera_feed(frame)
             if detection_result.detections:
-                label = detection_result.detections[0].categories[0].label
+                label = ""
+                for detection in detection_result.detections:
+                    for category in detection.categories:
+                        label = category.category_name
+                        confidence = category.score
+
                 self.detection_label.configure(text=label)
 
                 # Trigger success detection if label matches last detection after 1 second
