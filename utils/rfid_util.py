@@ -6,7 +6,7 @@ class RFIDReader:
 
     def __init__(self):
         self.reader_name = "Sycreader RFID Technology Co., Ltd SYC ID&IC USB Reader"
-        self.device = self.find_rfid_device()
+        self.device = evdev.InputDevice
         self.rfid_number = None
         self.authcode = []
         self.conversion_table = {
@@ -15,10 +15,13 @@ class RFIDReader:
             28: 'Enter'
         }
 
+        self.device = self.find_rfid_device()
+
     def find_rfid_device(self):
         """Find the RFID reader device."""
         devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
         for dev in devices:
+            print(f"Found device: {dev.name}")
             if dev.name == self.reader_name:
                 return evdev.InputDevice(dev.path)
         return None
