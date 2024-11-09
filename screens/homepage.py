@@ -67,7 +67,7 @@ class HomePage(ctk.CTkFrame):
     def show_success_modal(self, message, student):
         """Display a success modal, then navigate after 2 seconds."""
         messagebox.showinfo("Success", message)
-        self.after(2000, lambda: self.navigate_callback("main_menu", student_data=student))
+        self.after(500, lambda: self.navigate_callback("main_menu", student_data=student))
 
     def show_error_modal(self, message):
         """Display an error modal."""
