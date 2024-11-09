@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
 import requests
-from utils.rfid_util import scan_rfid
+from utils.rfid_util import RFIDReader
 from utils.utils import API_URL
 
 
@@ -12,7 +12,6 @@ class HomePage(ctk.CTkFrame):
 
         # Store the navigation callback
         self.navigate_callback = navigate_callback
-        self.stop_scanning = False  # Flag to control the scanning loop
 
         # Layout configuration
         self.grid_rowconfigure(0, weight=1)
@@ -26,27 +25,22 @@ class HomePage(ctk.CTkFrame):
         self.scan_text = ctk.CTkLabel(self.frame, text="Scan your RFID", font=("Arial", 24), bg_color="black", fg_color="white")
         self.scan_text.pack(pady=20)
 
+        # Initialize the RFID reader and start scanning
+        self.rfid_reader = RFIDReader()
+        self.rfid_reader.start_scanning()
+
         # Start RFID scanning when the homepage is loaded
-        self.start_rfid_scanning()
-    def read_rfid(self):
-        """Scan the RFID and handle the process without blocking the main UI."""
-        if not self.stop_scanning:
-            rfid_number = scan_rfid()  # Call the utility function to scan RFID
-            if rfid_number:
-                print(f"Scanned RFID Number: {rfid_number}")
-                self.send_rfid_to_server(rfid_number)
-            else:
-                # If no RFID is scanned, try again after 1 second
-                self.after(1000, self.scan_rfid)  # Check again in 1 second
+        self.check_rfid_loop()
 
-    def start_rfid_scanning(self):
-        """Start the RFID scanning without threading, using after method."""
-        self.stop_scanning = False  # Reset the stop flag
-        self.read_rfid()  # Call the scan_rfid method directly
-
-    def stop_rfid_scanning(self):
-        """Stop the RFID scanning loop."""
-        self.stop_scanning = True
+    def check_rfid_loop(self):
+        """Check if a new RFID was scanned and process it."""
+        rfid_number = self.rfid_reader.get_rfid_number()
+        if rfid_number:
+            print(f"Scanned RFID Number: {rfid_number}")
+            self.rfid_reader.rfid_number = None  # Reset after processing
+            self.send_rfid_to_server(rfid_number)
+        # Schedule the next check
+        self.after(1000, self.check_rfid_loop)
 
     def send_rfid_to_server(self, rfid):
         """Send the RFID data to the server and process the response."""
@@ -150,10 +144,43 @@ class HomePage(ctk.CTkFrame):
         submit_button = ctk.CTkButton(form_modal, text="Submit", command=lambda: self.add_student_to_server(form_modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input, current_points_value))
         submit_button.pack(pady=10)
 
-    def add_student_to_server(self, modal, rfid, alias, first_name, last_name, middle_name, email, password, points):
-        """Add the student to the server and display a confirmation modal."""
-        modal.destroy()
+    def add_student_to_server(self, form_modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input):
+        """Submit the new student data to the backend after authentication."""
+        # form_modal.destroy()
 
-        # Logic to add student (POST request) here
-        # After success, navigate to main menu
-        self.show_success_modal("Student added successfully!", {"rfid": rfid, "alias": alias.get()})
+        # Get the input values
+        alias = alias_input.get()
+        first_name = first_name_input.get()
+        last_name = last_name_input.get()
+        middle_name = middle_name_input.get() if middle_name_input.get() else None
+        email = email_input.get()
+        password = password_input.get()
+
+        # Verify user email and password for authentication
+        if not email or not password:
+            self.show_error_modal("Email and password are required.")
+            return
+
+        # Send the request to the backend to create the student
+        try:
+            url = f"{API_URL}/students"
+            data = {
+                "rfid": rfid,
+                "alias": alias,
+                "first_name": first_name,
+                "last_name": last_name,
+                "middle_name": middle_name,
+                "email": email,
+                "password": password
+            }
+
+            response = requests.post(url, json=data)
+            if response.status_code == 201:
+                messagebox.showinfo("Success", "Student added successfully!")
+                form_modal.destroy()
+                self.navigate_callback("main_menu")  # Navigate to the main menu after success
+            else:
+                self.show_error_modal("Failed to add student. Please try again.")
+
+        except requests.RequestException as e:
+            self.show_error_modal(f"Error contacting server: {e}")

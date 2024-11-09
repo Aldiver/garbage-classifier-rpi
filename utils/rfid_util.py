@@ -1,67 +1,57 @@
 import evdev
+import threading
 
-# Specify the RFID reader device name
-reader = "Sycreader RFID Technology Co., Ltd SYC ID&IC USB Reader"
+class RFIDReader:
+    """Class to handle RFID scanning in a separate thread and store the last scanned RFID number."""
 
-# Initialize the device and authcode list
-device = None
-authcode = []
-rfid_number = ""  # Variable to store the entire RFID number
+    def __init__(self):
+        self.reader_name = "Sycreader RFID Technology Co., Ltd SYC ID&IC USB Reader"
+        self.device = self.find_rfid_device()
+        self.rfid_number = None
+        self.authcode = []
+        self.conversion_table = {
+            11: '0', 2: '1', 3: '2', 4: '3', 5: '4',
+            6: '5', 7: '6', 8: '7', 9: '8', 10: '9',
+            28: 'Enter'
+        }
 
-# Conversion table to map evdev key codes to characters (adding "Enter" for the return key)
-conversionTable = {
-    11: '0',     # Key '0'
-    2: '1',      # Key '1'
-    3: '2',      # Key '2'
-    4: '3',      # Key '3'
-    5: '4',      # Key '4'
-    6: '5',      # Key '5'
-    7: '6',      # Key '6'
-    8: '7',      # Key '7'
-    9: '8',      # Key '8'
-    10: '9',     # Key '9'
-    28: 'Enter'  # Enter key
-}
-
-# Function to map the input event array to a string
-def mapInput(inputEventArray):
-    input_str = ""
-    for event in inputEventArray:
-        if event.code in conversionTable:
-            input_str += conversionTable[event.code]
-    return input_str
-
-def find_rfid_device():
-    """Find the RFID reader device."""
-    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-    for dev in devices:
-        if dev.name == reader:
-            return evdev.InputDevice(dev.path)
-    return None
-
-def scan_rfid():
-    """Scan the RFID and return the number."""
-    global device, rfid_number, authcode
-    device = find_rfid_device()
-    if device is None:
-        print("No Device")
+    def find_rfid_device(self):
+        """Find the RFID reader device."""
+        devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+        for dev in devices:
+            if dev.name == self.reader_name:
+                return evdev.InputDevice(dev.path)
         return None
 
-    rfid_number = ""  # Reset the RFID number
-    authcode = []  # Clear the authcode list
+    def map_input(self, input_event_array):
+        """Convert the event codes into an RFID string."""
+        return ''.join(self.conversion_table[event.code] for event in input_event_array if event.code in self.conversion_table)
 
-    # Start reading events from the device
-    for event in device.read_loop():
-        if event.type == evdev.ecodes.EV_KEY:
-            if event.value == 1:
-                if event.code != 28:
-                    authcode.append(event)
-            elif event.value == 0:
-                if len(authcode) > 0:
-                    input_str = mapInput(authcode)
-                    rfid_number += input_str  # Append to rfid_number
-                    authcode = []  # Reset the authcode list after processing
+    def scan_rfid_loop(self):
+        """Main loop to scan RFID and update `rfid_number`."""
+        if not self.device:
+            print("RFID reader device not found.")
+            return
 
-                    # If the RFID scan is complete (Enter key pressed)
-                    if event.code == 28:
-                        return rfid_number
+        self.rfid_number = ""  # Clear the last scanned number
+        self.authcode = []
+
+        for event in self.device.read_loop():
+            if event.type == evdev.ecodes.EV_KEY:
+                if event.value == 1 and event.code != 28:  # Key press and not Enter
+                    self.authcode.append(event)
+                elif event.value == 0:  # Key release
+                    if self.authcode:
+                        input_str = self.map_input(self.authcode)
+                        self.rfid_number += input_str
+                        self.authcode = []
+                    if event.code == 28:  # Enter key signals end of scan
+                        return self.rfid_number  # Return complete RFID number
+
+    def start_scanning(self):
+        """Start a thread that continually scans for RFID."""
+        threading.Thread(target=self.scan_rfid_loop, daemon=True).start()
+
+    def get_rfid_number(self):
+        """Return the current RFID number."""
+        return self.rfid_number
