@@ -100,7 +100,9 @@ class HomePage(ctk.CTkFrame):
         # Input fields
         rfid_label = ctk.CTkLabel(form_modal, text="RFID:")
         rfid_label.pack(pady=5)
-        rfid_input = ctk.CTkEntry(form_modal, state="disabled", value=rfid)
+        rfid_input = ctk.CTkEntry(form_modal)
+        rfid_input.insert(0, rfid)  # Insert RFID value
+        rfid_input.configure(state="readonly")  # Make the field readonly
         rfid_input.pack(pady=5)
 
         alias_label = ctk.CTkLabel(form_modal, text="Alias:")
@@ -141,12 +143,19 @@ class HomePage(ctk.CTkFrame):
         password_input.pack(pady=5)
 
         # Submit button
-        submit_button = ctk.CTkButton(form_modal, text="Submit", command=lambda: self.add_student_to_server(form_modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input, current_points_value))
+        submit_button = ctk.CTkButton(
+            form_modal, text="Submit",
+            command=lambda: self.add_student_to_server(
+                form_modal, rfid, alias_input, first_name_input,
+                last_name_input, middle_name_input, email_input,
+                password_input, current_points_value
+            )
+        )
         submit_button.pack(pady=10)
 
     def add_student_to_server(self, form_modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input):
         """Submit the new student data to the backend after authentication."""
-        # form_modal.destroy()
+        form_modal.destroy()
 
         # Get the input values
         alias = alias_input.get()
