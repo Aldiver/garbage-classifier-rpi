@@ -179,7 +179,7 @@ class HomePage(ctk.CTkFrame):
         try:
             url = f"{API_URL}/students"
             print(f"Sending request to: {url}")
-            data = {
+            student_data = {
                 "rfid": rfid,
                 "alias": alias,
                 "first_name": first_name,
@@ -189,7 +189,8 @@ class HomePage(ctk.CTkFrame):
                 "password": password
             }
 
-            response = requests.post(url, data=data)
+            response = requests.post(url, data=student_data)
+            print(response)
             if response.status_code == 201:
                 messagebox.showinfo("Success", "Student added successfully!")
                 self.navigate_callback("main_menu")  # Navigate to the main menu after success
