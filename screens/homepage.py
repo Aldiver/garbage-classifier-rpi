@@ -158,9 +158,9 @@ class HomePage(ctk.CTkFrame):
         )
         submit_button.grid(row=8, column=0, columnspan=2, pady=(20, 10))
 
-    def add_student_to_server(self, form_modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input):
+    def add_student_to_server(self, modal, rfid, alias_input, first_name_input, last_name_input, middle_name_input, email_input, password_input):
         """Submit the new student data to the backend after authentication."""
-        form_modal.destroy()
+        modal.destroy()
 
         # Get the input values
         alias = alias_input.get()
