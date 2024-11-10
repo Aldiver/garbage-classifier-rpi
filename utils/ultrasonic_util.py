@@ -4,14 +4,14 @@ import time
 GPIO.setmode(GPIO.BCM)
 
 # Define the sensors and their TRIG/ECHO pins
-sensors = [
+ultrasonic_sensors = [
     {"TRIG": 17, "ECHO": 5},
     {"TRIG": 27, "ECHO": 6},
     {"TRIG": 22, "ECHO": 13},
 ]
 
 # Set up each sensor
-for sensor in sensors:
+for sensor in ultrasonic_sensors:
     GPIO.setup(sensor["TRIG"], GPIO.OUT)
     GPIO.setup(sensor["ECHO"], GPIO.IN)
 

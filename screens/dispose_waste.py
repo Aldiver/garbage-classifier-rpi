@@ -7,7 +7,7 @@ from tfprocess import detect  # Adjust path if needed
 
 from utils.ir_util import get_sensor_value, sensor1, sensor2, sensor3
 from utils.servo_util import move_servo
-from utils.ultrasonic_util import get_distance, calculate_bin_level, sensors
+from utils.ultrasonic_util import get_distance, calculate_bin_level, ultrasonic_sensors
 
 class DisposeWaste(ctk.CTkFrame):
     def __init__(self, parent, navigate_callback):
@@ -45,7 +45,7 @@ class DisposeWaste(ctk.CTkFrame):
 
     def update_bin_levels(self):
     # Get the bin levels based on the distance readings from each ultrasonic sensor
-        for i, sensor in enumerate(sensors):  # Assuming `sensors` is the list of ultrasonic sensors
+        for i, sensor in enumerate(ultrasonic_sensors):  # Assuming `sensors` is the list of ultrasonic sensors
             distance = get_distance(sensor)  # Get distance from ultrasonic sensor
             bin_level = calculate_bin_level(distance)  # Calculate bin level based on distance
 
@@ -57,13 +57,13 @@ class DisposeWaste(ctk.CTkFrame):
     def success_detection(self):
         detection_type = self.last_detection
         sensors = {
-            "Recyclable": (sensor1, 0),
-            "Residual": (sensor2, 1),
-            "Biodegradable": (sensor3, 2)
+            "Recyclable": (sensor1, 0, ultrasonic_sensors[0]),
+            "Residual": (sensor2, 1, ultrasonic_sensors[1]),
+            "Biodegradable": (sensor3, 2, ultrasonic_sensors[2])
         }
 
         if detection_type in sensors:
-            sensor, bin_index = sensors[detection_type]
+            sensor, bin_index, ultrasonic_sensor = sensors[detection_type]
 
             # Rotate the servo associated with the detected type
             move_servo(bin_index * 4, 180)
@@ -82,7 +82,7 @@ class DisposeWaste(ctk.CTkFrame):
             # If object detected in the 5-second window
             if object_detected:
                 move_servo(bin_index * 4, 0)  # Reset servo to 0
-                distance = get_distance(sensor)
+                distance = get_distance(ultrasonic_sensor)
                 bin_level = calculate_bin_level(distance)
                 self.bin_labels[bin_index].configure(text=f"Bin {bin_index+1} Level: {bin_level}%")
                 print(f"{detection_type} detected: Bin {bin_index+1} Level: {bin_level}%")
@@ -91,7 +91,7 @@ class DisposeWaste(ctk.CTkFrame):
             else:
                 # If no object was detected, reset servo and navigate to home
                 move_servo(bin_index * 4, 0)  # Reset servo to 0
-                distance = get_distance(sensor)
+                distance = get_distance(ultrasonic_sensor)
                 bin_level = calculate_bin_level(distance)
                 self.bin_labels[bin_index].configure(text=f"Bin {bin_index+1} Level: {bin_level}%")
                 print(f"No trash inserted for {detection_type}. Returning to home screen.")
