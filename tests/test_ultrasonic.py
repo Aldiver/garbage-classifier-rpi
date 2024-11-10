@@ -1,11 +1,15 @@
 from gpiozero import DistanceSensor
+from gpiozero.pins.pigpio import PiGPIOFactory
 from time import sleep
 
-# Define GPIO pins for the TRIG and ECHO of each sensor
+# Specify the pigpio factory for more accurate readings
+factory = PiGPIOFactory()
+
+# Define the sensors using pigpio as the factory
 sensors = [
-    DistanceSensor(echo=5, trigger=17),
-    DistanceSensor(echo=6, trigger=27),
-    DistanceSensor(echo=13, trigger=22),
+    DistanceSensor(echo=5, trigger=17, pin_factory=factory),
+    DistanceSensor(echo=6, trigger=27, pin_factory=factory),
+    DistanceSensor(echo=13, trigger=22, pin_factory=factory),
 ]
 
 try:
