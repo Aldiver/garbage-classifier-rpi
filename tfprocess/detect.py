@@ -7,7 +7,7 @@ import time
 
 def start_detection():
     # Load the model directly without command-line arguments
-    model_path = 'garbage_classifier_model.tflite'
+    model_path = '/home/admin/Desktop/thesis/garbage-classifier-rpi/tfprocess/garbage_classifier_model.tflite'
     camera_id = 0
     width, height = 640, 480
     num_threads = 4
