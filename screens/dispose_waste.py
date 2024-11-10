@@ -7,7 +7,7 @@ from tfprocess import detect  # Adjust path if needed
 
 from utils.ir_util import get_sensor_value, sensor1, sensor2, sensor3
 from utils.servo_util import move_servo
-from utils.ultrasonic_util import get_distance, calculate_bin_level
+from utils.ultrasonic_util import get_distance, calculate_bin_level, sensors
 
 class DisposeWaste(ctk.CTkFrame):
     def __init__(self, parent, navigate_callback):
@@ -44,12 +44,15 @@ class DisposeWaste(ctk.CTkFrame):
         self.update_bin_levels()
 
     def update_bin_levels(self):
-        # Get the bin levels based on the distance readings from each sensor
-        for i, sensor in enumerate([sensor1, sensor2, sensor3]):
-            distance = get_distance(sensor)
-            bin_level = calculate_bin_level(distance)
+    # Get the bin levels based on the distance readings from each ultrasonic sensor
+        for i, sensor in enumerate(sensors):  # Assuming `sensors` is the list of ultrasonic sensors
+            distance = get_distance(sensor)  # Get distance from ultrasonic sensor
+            bin_level = calculate_bin_level(distance)  # Calculate bin level based on distance
+
+            # Update the bin level label in the GUI
             self.bin_labels[i].configure(text=f"Bin {i+1} Level: {bin_level}%")
-            print(f"Initial Bin {i+1} Level: {bin_level}%")
+            print(f"Bin {i+1} Level: {bin_level}% (Distance: {distance} cm)")
+
 
     def success_detection(self):
         detection_type = self.last_detection
