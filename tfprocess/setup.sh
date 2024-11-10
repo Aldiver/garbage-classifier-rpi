@@ -25,4 +25,10 @@ if [ ! -f "$FILE" ]; then
     -o ${FILE}
 fi
 
-echo -e "Downloaded files are in ${DATA_DIR}"
+# Copy testmodel.tflite to the target directory if not already there
+FILE=${DATA_DIR}/garbage_classifier_model.tflite
+if [ ! -f "$FILE" ]; then
+  cp "garbage_classifier_model.tflite" "${DATA_DIR}"
+fi
+
+echo -e "Downloaded files and testmodel.tflite are in ${DATA_DIR}"
