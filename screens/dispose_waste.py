@@ -75,11 +75,12 @@ class DisposeWaste(ctk.CTkFrame):
             "Residual": (sensor2, 1, ultrasonic_sensors[1]),
             "Biodegradable": (sensor3, 2, ultrasonic_sensors[2])
         }
-
+        print(f"Object detection category: {main_category}")
         if main_category:
             sensor, bin_index, ultrasonic_sensor = sensors[main_category]
 
             # Rotate the servo associated with the detected type
+            print(f"Servo: {bin_index}")
             move_servo(bin_index * 4, 180)
             time.sleep(0.5)
 
