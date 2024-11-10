@@ -9,6 +9,12 @@ from utils.ir_util import get_sensor_value, sensor1, sensor2, sensor3
 from utils.servo_util import move_servo
 from utils.ultrasonic_util import get_distance, calculate_bin_level, ultrasonic_sensors
 
+subcategories = {
+        'Biodegradable': ['chopsticks', 'leaf', 'toothpick', 'Wooden Utensils', 'Juice Box', 'Paper Food Packages'],
+        'Recyclable': ['cardboard', 'glass', 'metal', 'paper', 'plastic'],
+        'Residual': ['bandaid', 'diapers', 'milkbox', 'napkin', 'pen', 'plasticene', 'rag', 'toothbrush', 'toothpastetube']
+    }
+
 class DisposeWaste(ctk.CTkFrame):
     def __init__(self, parent, navigate_callback):
         super().__init__(parent)
@@ -43,6 +49,13 @@ class DisposeWaste(ctk.CTkFrame):
 
         self.update_bin_levels()
 
+    def get_main_category(detection_type):
+        # Loop through subcategories and find the main category
+        for main_category, items in subcategories.items():
+            if detection_type in items:
+                return main_category
+        return None  # Return None if no category is found
+
     def update_bin_levels(self):
     # Get the bin levels based on the distance readings from each ultrasonic sensor
         for i, sensor in enumerate(ultrasonic_sensors):  # Assuming `sensors` is the list of ultrasonic sensors
@@ -56,14 +69,15 @@ class DisposeWaste(ctk.CTkFrame):
 
     def success_detection(self):
         detection_type = self.last_detection
+        main_category = self.get_main_category(detection_type)
         sensors = {
             "Recyclable": (sensor1, 0, ultrasonic_sensors[0]),
             "Residual": (sensor2, 1, ultrasonic_sensors[1]),
             "Biodegradable": (sensor3, 2, ultrasonic_sensors[2])
         }
 
-        if detection_type in sensors:
-            sensor, bin_index, ultrasonic_sensor = sensors[detection_type]
+        if main_category:
+            sensor, bin_index, ultrasonic_sensor = sensors[main_category]
 
             # Rotate the servo associated with the detected type
             move_servo(bin_index * 4, 180)
