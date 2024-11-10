@@ -41,6 +41,16 @@ class DisposeWaste(ctk.CTkFrame):
         self.detection_start_time = None
         self.video_feed = None
 
+        self.update_bin_levels()
+
+    def update_bin_levels(self):
+        # Get the bin levels based on the distance readings from each sensor
+        for i, sensor in enumerate([sensor1, sensor2, sensor3]):
+            distance = get_distance(sensor)
+            bin_level = calculate_bin_level(distance)
+            self.bin_labels[i].configure(text=f"Bin {i+1} Level: {bin_level}%")
+            print(f"Initial Bin {i+1} Level: {bin_level}%")
+
     def success_detection(self):
         detection_type = self.last_detection
         sensors = {
