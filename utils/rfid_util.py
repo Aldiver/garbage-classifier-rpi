@@ -36,20 +36,26 @@ class RFIDReader:
             print("RFID reader device not found.")
             return
 
-        self.rfid_number = ""  # Clear the last scanned number
+        collected_code = ""  # Clear the last scanned number
         self.authcode = []
 
-        for event in self.device.read_loop():
-            if event.type == evdev.ecodes.EV_KEY:
-                if event.value == 1 and event.code != 28:  # Key press and not Enter
-                    self.authcode.append(event)
-                elif event.value == 0:  # Key release
-                    if self.authcode:
-                        input_str = self.map_input(self.authcode)
-                        self.rfid_number += input_str
-                        self.authcode = []
-                    if event.code == 28:  # Enter key signals end of scan
-                        return self.rfid_number  # Return complete RFID number
+        try:
+            for event in self.device.read_loop():
+                if event.type == evdev.ecodes.EV_KEY:
+                    if event.value == 1 and event.code != 28:  # Key press and not Enter
+                        self.authcode.append(event)
+                    elif event.value == 0:  # Key release
+                        if self.authcode:
+                            input_str = self.map_input(self.authcode)
+                            if input_str is not None:  # Ensure input_str is valid before appending
+                                collected_code += input_str
+                            self.authcode = []
+                        if event.code == 28:  # Enter key signals end of scan
+                            self.rfid_number = collected_code
+                            return self.rfid_number  # Return complete RFID number
+        except Exception as e:
+            print(f"Error during RFID scanning: {e}")
+            self.rfid_number = None
 
     def start_scanning(self):
         """Start a thread that continually scans for RFID."""

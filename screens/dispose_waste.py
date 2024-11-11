@@ -48,6 +48,7 @@ class DisposeWaste(ctk.CTkFrame):
         self.video_feed = None
 
         self.update_bin_levels()
+        self.detection_thread_running = False
 
     def get_main_category(detection_type):
         # Loop through subcategories and find the main category
@@ -113,31 +114,48 @@ class DisposeWaste(ctk.CTkFrame):
                 # TODO: Display message and navigate to home screen
 
     def detect_object(self):
-        for frame, detection_result in detect.start_detection():
-            self.update_camera_feed(frame)
-            if detection_result.detections:
-                label = ""
-                for detection in detection_result.detections:
-                    for category in detection.categories:
-                        label = category.category_name
-                        confidence = category.score
+        if not self.detection_thread_running:
+            self.detection_thread_running = True
+            self.update()  # Force an update to render the window
+            time.sleep(0.5)  # Allow UI to fully render
 
-                self.detection_label.configure(text=label)
+            if not self.video_feed:
+                print("Video feed not initialized. Retrying...")
+                self.after(100, self.detect_object)
+                return
 
-                # Trigger success detection if label matches last detection after 1 second
-                if label == self.last_detection and time.time() - self.detection_start_time > 1:
-                    self.success_detection()
-                    break
+            # Start detection loop
+            for frame, detection_result in detect.start_detection():
+                if not self.detection_thread_running:
+                    break  # Exit if detection has been stopped
+
+                self.update_camera_feed(frame)
+                if detection_result.detections:
+                    label = ""
+                    for detection in detection_result.detections:
+                        for category in detection.categories:
+                            label = category.category_name
+                            confidence = category.score
+
+                    self.detection_label.configure(text=label)
+
+                    # Trigger success detection if label matches last detection after 1 second
+                    if label == self.last_detection and time.time() - self.detection_start_time > 1:
+                        self.success_detection()
+                        break
+                    else:
+                        self.last_detection = label
+                        self.detection_start_time = time.time()
                 else:
-                    self.last_detection = label
-                    self.detection_start_time = time.time()
-            else:
-                self.detection_label.configure(text="No detection")
-                self.last_detection = None
-                self.detection_start_time = None
+                    self.detection_label.configure(text="No detection")
+                    self.last_detection = None
+                    self.detection_start_time = None
 
-            self.update_idletasks()
-            self.update()
+                self.update_idletasks()
+                self.update()
+
+            detect.stop_detection()  # Ensure the camera stops after exiting detection loop
+            self.detection_thread_running = False
 
     def update_camera_feed(self, frame):
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -151,5 +169,7 @@ class DisposeWaste(ctk.CTkFrame):
         self.video_feed.image = imgtk
 
     def stop_detection(self):
+        self.detection_thread_running = False  # Stop the detection loop
+        detect.stop_detection()  # Set the global flag to stop detection in `start_detection`
         self.status_label.configure(text="Detection Stopped")
         self.detection_label.configure(text="Stopped")
