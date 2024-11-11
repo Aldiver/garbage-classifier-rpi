@@ -15,5 +15,9 @@ class TestHomePage(ctk.CTkFrame):
 
         # RFID image
         self.rfid_image = ctk.CTkImage(light_image=Image.open("images/homepage.png"), size=(1280, 720))
-        self.rfid_label = ctk.CTkLabel(self.frame,  image=self.rfid_image, text="")  # Empty text to display only the image
+        self.rfid_label = ctk.CTkLabel(self.frame, image=self.rfid_image, text="")  # Empty text to display only the image
         self.rfid_label.place(relx=0.5, rely=0.5, anchor="center")  # Center the RFID image
+
+        # RFID Text
+        # self.scan_text = ctk.CTkLabel(self.frame, text="Scan your RFID", font=("Lao UI", 24), bg_color="black", fg_color="white")
+        # self.scan_text.place(relx=0.5, rely=0.6, anchor="center")  # Center the text below the RFID image
