@@ -70,7 +70,7 @@ class DisposeWaste(ctk.CTkFrame):
     #         print(f"Bin {i+1} Level: {bin_level}% (Distance: {distance} cm)")
 
     def start_detection(self):
-        time.sleep(0.5)
+        self.update()
         if not self.detection_active:
             self.detection_active = True
             self.detect_object()
@@ -124,8 +124,8 @@ class DisposeWaste(ctk.CTkFrame):
         if not self.video_feed_initialized:
             print("Initializing video feed...")
             self.video_feed_initialized = True
-            self.video_feed = tk.Label(self.left_frame)
-            self.video_feed.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+            # self.video_feed = tk.Label(self.left_frame)
+            # self.video_feed.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         for frame, detection_result in detect.start_detection():
             print("Detecting")
@@ -133,7 +133,7 @@ class DisposeWaste(ctk.CTkFrame):
                 break
 
             if detection_result.detections:
-                self.after(50, self.update_camera_feed, frame)
+                # self.after(50, self.update_camera_feed, frame)
                 print("checking results")
                 for detection in detection_result.detections:
                     for category in detection.categories:
