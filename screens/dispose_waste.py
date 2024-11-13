@@ -136,7 +136,7 @@ class DisposeWaste(ctk.CTkFrame):
                     for category in detection.categories:
                         print("checking category")
                         label = category.category_name
-                        if label == self.last_detection and (time.time() - self.detection_start_time) > .5:
+                        if label == self.last_detection and (time.time() - self.detection_start_time) > .1:
                             print("success")
                             self.success_detection()
                             break
