@@ -124,8 +124,8 @@ class DisposeWaste(ctk.CTkFrame):
         if not self.video_feed_initialized:
             print("Initializing video feed...")
             self.video_feed_initialized = True
-            self.video_feed = tk.Label(self.left_frame)
-            self.video_feed.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+            # self.video_feed = tk.Label(self.left_frame)
+            # self.video_feed.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         for frame, detection_result in detect.start_detection():
             print("Detecting")
@@ -169,9 +169,9 @@ class DisposeWaste(ctk.CTkFrame):
             self.update_idletasks()
             self.update()
 
-    def update_camera_feed(self, frame):
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(frame_rgb)
-        imgtk = ImageTk.PhotoImage(image=img)
-        self.video_feed.configure(image=imgtk)
-        self.video_feed.image = imgtk
+    # def update_camera_feed(self, frame):
+    #     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    #     img = Image.fromarray(frame_rgb)
+    #     imgtk = ImageTk.PhotoImage(image=img)
+    #     self.video_feed.configure(image=imgtk)
+    #     self.video_feed.image = imgtk
