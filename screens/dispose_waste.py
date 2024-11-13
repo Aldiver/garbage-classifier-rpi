@@ -119,9 +119,8 @@ class DisposeWaste(ctk.CTkFrame):
                 # TODO: Navigate to home or show a message
             # TODO: Add points if disposal was successful
 
-            self.stop_detection()
-
     def detect_object(self):
+        self.update()
         if not self.detection_active:
             return
 
@@ -168,8 +167,7 @@ class DisposeWaste(ctk.CTkFrame):
                 self.last_detection = None
                 self.detection_start_time = None
 
-            self.update_idletasks()
-            self.update()
+            self.stop_detection()
 
     def update_camera_feed(self, frame):
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
