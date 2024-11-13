@@ -132,7 +132,7 @@ class DisposeWaste(ctk.CTkFrame):
             if not self.detection_active:
                 break
 
-            self.update_camera_feed(frame)
+            # self.update_camera_feed(frame)
 
             if detection_result.detections:
                 # self.after(50, self.update_camera_feed, frame)
