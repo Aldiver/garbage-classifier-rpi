@@ -149,7 +149,7 @@ class DisposeWaste(ctk.CTkFrame):
                             print("Initialized last detection")
                         elif label == self.last_detection:
                             # Check if sufficient time has passed for a successful detection
-                            if (time.time() - self.detection_start_time) > 0.1:
+                            if (time.time() - self.detection_start_time) > 0.5:
                                 print("Successful detection confirmed")
                                 self.success_detection()
                                 break  # Exit after success
