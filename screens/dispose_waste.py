@@ -167,9 +167,9 @@ class DisposeWaste(ctk.CTkFrame):
             self.update_idletasks()
             self.update()
 
-    # def update_camera_feed(self, frame):
-    #     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    #     img = Image.fromarray(frame_rgb)
-    #     imgtk = ImageTk.PhotoImage(image=img)
-    #     self.video_feed.configure(image=imgtk)
-    #     self.video_feed.image = imgtk
+    def update_camera_feed(self, frame):
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        img = Image.fromarray(frame_rgb)
+        imgtk = ImageTk.PhotoImage(image=img)
+        self.video_feed.configure(image=imgtk)
+        self.video_feed.image = imgtk
