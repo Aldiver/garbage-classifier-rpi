@@ -81,6 +81,7 @@ class DisposeWaste(ctk.CTkFrame):
 
     def success_detection(self):
         detection_type = self.last_detection
+        self.last_detection = None
         main_category = self.get_main_category(detection_type)
         sensors = {
             "Recyclable": (sensor1, 0, ultrasonic_sensors[0]),
@@ -135,16 +136,26 @@ class DisposeWaste(ctk.CTkFrame):
                 print("checking results")
                 for detection in detection_result.detections:
                     for category in detection.categories:
-                        print(f"checking category {category.category_name}")
                         label = category.category_name
-                        if label == self.last_detection and (time.time() - self.detection_start_time) > .1:
-                            print("success")
-                            self.success_detection()
-                            break
-                        else:
-                            print("no detection")
-                            self.last_detection = "Detecting"
+                        print(f"Checking category {label}")
+
+                        # If no previous detection, initialize last_detection
+                        if self.last_detection is None:
+                            self.last_detection = label
                             self.detection_start_time = time.time()
+                            print("Initialized last detection")
+                        elif label == self.last_detection:
+                            # Check if sufficient time has passed for a successful detection
+                            if (time.time() - self.detection_start_time) > 0.1:
+                                print("Successful detection confirmed")
+                                self.success_detection()
+                                break  # Exit after success
+                        else:
+                            # If the label differs, reset detection tracking
+                            print("Detection mismatch, resetting timer")
+                            self.last_detection = label
+                            self.detection_start_time = time.time()
+
                 self.detection_label.configure(text=label)
             else:
                 print("No Detection Results")
