@@ -67,7 +67,6 @@ class DisposeWaste(ctk.CTkFrame):
             self.bin_labels[i].configure(text=f"Bin {i+1} Level: {bin_level}%")
             print(f"Bin {i+1} Level: {bin_level}% (Distance: {distance} cm)")
 
-
     def success_detection(self):
         detection_type = self.last_detection
         main_category = self.get_main_category(detection_type)
@@ -126,17 +125,18 @@ class DisposeWaste(ctk.CTkFrame):
 
             # Start detection loop
             for frame, detection_result in detect.start_detection():
+                print("frame, detection_result")
                 if not self.detection_thread_running:
                     break  # Exit if detection has been stopped
 
                 self.update_camera_feed(frame)
                 if detection_result.detections:
+                    print("detection_result.detections")
                     label = ""
                     for detection in detection_result.detections:
                         for category in detection.categories:
                             label = category.category_name
                             confidence = category.score
-
                     self.detection_label.configure(text=label)
 
                     # Trigger success detection if label matches last detection after 1 second
@@ -154,8 +154,7 @@ class DisposeWaste(ctk.CTkFrame):
                 self.update_idletasks()
                 self.update()
 
-            detect.stop_detection()  # Ensure the camera stops after exiting detection loop
-            self.detection_thread_running = False
+            self.stop_detection
 
     def update_camera_feed(self, frame):
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
