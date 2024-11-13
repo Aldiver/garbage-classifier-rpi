@@ -3,17 +3,17 @@ import tkinter as tk
 import cv2
 from PIL import Image, ImageTk
 import time
-from tfprocess import detect
+from tfprocess import detect  # Adjust path if needed
 
 from utils.ir_util import get_sensor_value, sensor1, sensor2, sensor3
 from utils.servo_util import move_servo
 from utils.ultrasonic_util import get_distance, calculate_bin_level, ultrasonic_sensors
 
 subcategories = {
-    'Biodegradable': ['chopsticks', 'leaf', 'toothpick', 'Wooden Utensils', 'Juice Box', 'Paper Food Packages'],
-    'Recyclable': ['cardboard', 'glass', 'metal', 'paper', 'plastic'],
-    'Residual': ['bandaid', 'diapers', 'milkbox', 'napkin', 'pen', 'plasticene', 'rag', 'toothbrush', 'toothpastetube']
-}
+        'Biodegradable': ['chopsticks', 'leaf', 'toothpick', 'Wooden Utensils', 'Juice Box', 'Paper Food Packages'],
+        'Recyclable': ['cardboard', 'glass', 'metal', 'paper', 'plastic'],
+        'Residual': ['bandaid', 'diapers', 'milkbox', 'napkin', 'pen', 'plasticene', 'rag', 'toothbrush', 'toothpastetube']
+    }
 
 class DisposeWaste(ctk.CTkFrame):
     def __init__(self, parent, navigate_callback):
@@ -45,14 +45,14 @@ class DisposeWaste(ctk.CTkFrame):
         self.detection_label.pack(pady=20)
 
         # Bin level display
-        self.bin_labels = []
-        for i in range(3):
-            label = ctk.CTkLabel(self.right_frame, text=f"Bin {i+1} Level: 0%", font=("Arial", 16), bg_color="black", fg_color="white")
-            label.pack()
-            self.bin_labels.append(label)
+        # self.bin_labels = []
+        # for i in range(3):
+        #     label = ctk.CTkLabel(self.right_frame, text=f"Bin {i+1} Level: 0%", font=("Arial", 16), bg_color="black", fg_color="white")
+        #     label.pack()
+        #     self.bin_labels.append(label)
 
-        for label in self.bin_labels:
-            label.pack()
+        # for label in self.bin_labels:
+        #     label.pack()
 
         # self.update_bin_levels()
 
@@ -109,7 +109,7 @@ class DisposeWaste(ctk.CTkFrame):
             move_servo(bin_index * 4, 0)
             distance = get_distance(ultrasonic_sensor)
             bin_level = calculate_bin_level(distance)
-            self.bin_labels[bin_index].configure(text=f"Bin {bin_index+1} Level: {bin_level}%")
+            # self.bin_labels[bin_index].configure(text=f"Bin {bin_index+1} Level: {bin_level}%")
             print(f"Bin {bin_index+1} Level: {bin_level}%")
 
             if not object_detected:
