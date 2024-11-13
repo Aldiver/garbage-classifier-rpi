@@ -31,9 +31,9 @@ class DisposeWaste(ctk.CTkFrame):
 
         # Left and right frames
         self.left_frame = ctk.CTkFrame(self)
-        self.left_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.left_frame.grid(row=0, column=0, padx=10, pady=(10, 10), sticky="nsew")
         self.right_frame = ctk.CTkFrame(self, fg_color="white")
-        self.right_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        self.right_frame.grid(row=0, column=1, padx=10, pady=(10, 10), sticky="nsew")
 
         # Status label
         self.status_label = ctk.CTkLabel(self.left_frame, text="Scanning...", font=("Arial", 36), bg_color="black", fg_color="white")
@@ -135,7 +135,7 @@ class DisposeWaste(ctk.CTkFrame):
             self.update_camera_feed(frame)
 
             if detection_result.detections:
-                self.after(50, self.update_camera_feed, frame)
+                # self.after(50, self.update_camera_feed, frame)
                 print("checking results")
                 for detection in detection_result.detections:
                     for category in detection.categories:
