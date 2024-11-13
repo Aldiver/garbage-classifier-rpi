@@ -67,6 +67,7 @@ class DisposeWaste(ctk.CTkFrame):
             print(f"Bin {i+1} Level: {bin_level}% (Distance: {distance} cm)")
 
     def start_detection(self):
+        time.sleep(0.5)
         if not self.detection_active:
             self.detection_active = True
             self.detect_object()
@@ -123,23 +124,29 @@ class DisposeWaste(ctk.CTkFrame):
             self.video_feed.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         for frame, detection_result in detect.start_detection():
+            print("Detecting")
             if not self.detection_active:
                 break
 
             self.update_camera_feed(frame)
 
             if detection_result.detections:
+                print("checking results")
                 for detection in detection_result.detections:
                     for category in detection.categories:
+                        print("checking category")
                         label = category.category_name
-                        if label == self.last_detection and (time.time() - self.detection_start_time) > 1:
+                        if label == self.last_detection and (time.time() - self.detection_start_time) > .5:
+                            print("success")
                             self.success_detection()
                             break
                         else:
-                            self.last_detection = label
+                            print("no detection")
+                            self.last_detection = "Detecting"
                             self.detection_start_time = time.time()
                 self.detection_label.configure(text=label)
             else:
+                print("No Detection Results")
                 self.detection_label.configure(text="No detection")
                 self.last_detection = None
                 self.detection_start_time = None
