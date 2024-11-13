@@ -4,6 +4,7 @@ import cv2
 from PIL import Image, ImageTk
 import time
 from tfprocess import detect  # Adjust path if needed
+import threading
 
 from utils.ir_util import get_sensor_value, sensor1, sensor2, sensor3
 from utils.servo_util import move_servo
@@ -73,7 +74,8 @@ class DisposeWaste(ctk.CTkFrame):
         self.update()
         if not self.detection_active:
             self.detection_active = True
-            self.detect_object()
+            threading.Thread(target=self.detect_object).start()
+            # self.detect_object()
 
     def stop_detection(self):
         self.detection_active = False
@@ -116,6 +118,8 @@ class DisposeWaste(ctk.CTkFrame):
                 print("No object detected. Returning to home screen.")
                 # TODO: Navigate to home or show a message
             # TODO: Add points if disposal was successful
+
+            self.stop_detection()
 
     def detect_object(self):
         if not self.detection_active:
