@@ -44,10 +44,12 @@ class DisposeWaste(ctk.CTkFrame):
         self.detection_label.pack(pady=20)
 
         # Bin level display
-        self.bin_labels = [
-            ctk.CTkLabel(self.right_frame, text=f"Bin {i+1} Level: 0%", font=("Arial", 16), bg_color="black", fg_color="white")
-            for i in range(3)
-        ]
+        self.bin_labels = []
+        for i in range(3):
+            label = ctk.CTkLabel(self.right_frame, text=f"Bin {i+1} Level: 0%", font=("Arial", 16), bg_color="black", fg_color="white")
+            label.pack()
+            self.bin_labels.append(label)
+
         for label in self.bin_labels:
             label.pack()
 
@@ -133,6 +135,7 @@ class DisposeWaste(ctk.CTkFrame):
             self.update_camera_feed(frame)
 
             if detection_result.detections:
+                self.after(50, self.update_camera_feed, frame)
                 print("checking results")
                 for detection in detection_result.detections:
                     for category in detection.categories:
