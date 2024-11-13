@@ -113,10 +113,11 @@ class DisposeWaste(ctk.CTkFrame):
                 # TODO: Display message and navigate to home screen
 
     def detect_object(self):
+        time.sleep(0.5)  # Allow UI to fully render
         if not self.detection_thread_running:
             self.detection_thread_running = True
             self.update()  # Force an update to render the window
-            time.sleep(0.5)  # Allow UI to fully render
+
 
             if not self.video_feed:
                 print("Video feed not initialized. Retrying...")
