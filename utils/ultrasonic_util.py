@@ -35,4 +35,4 @@ def get_distance(sensor):
 
 # Function to calculate bin level based on the distance measurement
 def calculate_bin_level(distance, max_distance=35):  # Max distance set to 35 cm
-    return max(0, min(100, (1 - distance / max_distance) * 100))
+    return round(max(0, min(100, (1 - distance / max_distance) * 100)), 2)
