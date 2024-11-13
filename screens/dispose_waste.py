@@ -120,8 +120,8 @@ class DisposeWaste(ctk.CTkFrame):
         if not self.video_feed_initialized:
             print("Initializing video feed...")
             self.video_feed_initialized = True
-            self.video_feed = tk.Label(self.left_frame)
-            self.video_feed.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+            # self.video_feed = tk.Label(self.left_frame)
+            # self.video_feed.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         for frame, detection_result in detect.start_detection():
             print("Detecting")
