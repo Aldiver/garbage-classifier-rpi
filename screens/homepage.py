@@ -30,7 +30,6 @@ class HomePage(ctk.CTkFrame):
         self.rfid_reader.start()
 
         # Start RFID scanning when the homepage is loaded
-        self.handle_rfid_scan()
 
     def handle_rfid_scan(self, rfid_number):
         """
