@@ -47,7 +47,7 @@ class Leaderboard(ctk.CTkFrame):
         Fetch leaderboard data from the server.
         """
         try:
-            url = f"{API_URL}/update-points/{self.student['rfid']}"
+            url = f"{API_URL}/leaderboard/{self.student['rfid']}"
             response = requests.get(url)
             if response.status_code == 200:
                 leaderboard_data = response.json()
