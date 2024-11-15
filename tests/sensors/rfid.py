@@ -5,7 +5,7 @@ import evdev
 pprint = pprint
 
 # Specify the RFID reader device name
-reader = "Sycreader RFID Technology Co., Ltd SYC ID&IC USB Reader"
+reader = "IC Reader IC Reader"
 
 # Initialize the device and authcode list
 device = evdev.InputDevice
