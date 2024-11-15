@@ -12,6 +12,7 @@ class Leaderboard(ctk.CTkFrame):
         # Store the navigation callback
         self.navigate_callback = navigate_callback
 
+        # Grid configuration
         self.grid_columnconfigure(0, weight=3)
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -28,6 +29,10 @@ class Leaderboard(ctk.CTkFrame):
         title = ctk.CTkLabel(self.right_frame, text="Top 10 Leaderboard", font=("Arial", 28, "bold"), fg_color="white", bg_color="white")
         title.pack(pady=20)
 
+        # Add "Back" button in the top-left of the frame
+        back_button = ctk.CTkButton(self.left_frame, text="Back", command=self.navigate_callback(("main_menu")))
+        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
     def update_with_student_data(self, student_data):
         """
         Update the leaderboard with student data fetched from an API.
@@ -42,7 +47,7 @@ class Leaderboard(ctk.CTkFrame):
         Fetch leaderboard data from the server.
         """
         try:
-            url = f"{API_URL}/update-points/{self.student.rfid}"
+            url = f"{API_URL}/update-points/{self.student['rfid']}"
             response = requests.get(url)
             if response.status_code == 200:
                 leaderboard_data = response.json()
@@ -87,13 +92,3 @@ class Leaderboard(ctk.CTkFrame):
                 text_color="yellow" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "white"
             )
             label.pack(pady=5)
-
-if __name__ == "__main__":
-    # Initialize customtkinter appearance
-    ctk.set_appearance_mode("dark")
-    ctk.set_default_color_theme("blue")
-
-    # Initialize application with navigate callback
-    app = Leaderboard(parent=None, navigate_callback=None)
-    app.update_with_student_data({'rfid': '12345', 'alias': 'John Doe'})
-    app.mainloop()
