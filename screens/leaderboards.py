@@ -10,7 +10,7 @@ class Leaderboard(ctk.CTkFrame):
         # Store the navigation callback
         self.navigate_callback = navigate_callback
 
-        # Grid configuration
+        # Grid configuration for the main frame
         self.grid_columnconfigure(0, weight=3)
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -30,6 +30,10 @@ class Leaderboard(ctk.CTkFrame):
         # Add "Back" button in the top-left of the frame
         self.back_button = ctk.CTkButton(self.left_frame, text="Back", command=self.navigate_callback("main_menu"))
         self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+        # Create a new frame for the leaderboard labels inside left_frame
+        self.labels_frame = ctk.CTkFrame(self.left_frame)
+        self.labels_frame.grid(row=1, column=0, padx=10, pady=(10, 0), sticky="nsew")
 
     def update_with_student_data(self, student_data):
         """
@@ -59,10 +63,9 @@ class Leaderboard(ctk.CTkFrame):
         """
         Display the leaderboard data in the left frame.
         """
-        # Clear the left frame first (only remove previous leaderboard labels)
-        for widget in self.left_frame.winfo_children():
-            if isinstance(widget, ctk.CTkLabel):  # Only destroy leaderboard labels
-                widget.destroy()
+        # Clear the labels_frame first (only remove previous leaderboard labels)
+        for widget in self.labels_frame.winfo_children():
+            widget.destroy()
 
         # Display the top 10 users in the right frame
         for index, student in enumerate(leaderboard_data['leaderboard']):
@@ -78,12 +81,12 @@ class Leaderboard(ctk.CTkFrame):
             )
             label.pack(pady=5)
 
-        # Display the surrounding students (3 above, 3 below) in the left frame
+        # Display the surrounding students (3 above, 3 below) in the labels_frame
         for student in leaderboard_data['student_rank']:
             name = student['alias']
             points = student['current_points']
             label = ctk.CTkLabel(
-                self.left_frame,
+                self.labels_frame,
                 text=f"{student['rank']}. {name} -> {points}",
                 font=("Arial", 24),
                 fg_color="black",
