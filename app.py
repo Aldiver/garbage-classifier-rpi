@@ -40,7 +40,7 @@ class App(ctk.CTk):
         # Create and store each frame, passing the navigation callback
         self.pages["homepage"] = HomePage(self, self.show_frame, self.set_student_data)
         self.pages["main_menu"] = MainMenu(self, self.show_frame)
-        self.pages["check_points"] = CheckPoints(self, self.show_frame, username="", points=0)
+        self.pages["check_points"] = CheckPoints(self, self.show_frame)
         self.pages["leaderboard"] = Leaderboard(self, self.show_frame)
         self.pages["dispose_waste"] = DisposeWaste(self, self.show_frame)
 
