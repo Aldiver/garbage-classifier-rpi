@@ -1,7 +1,5 @@
 import customtkinter as ctk
-import tkinter as tk
 import requests
-
 from utils.utils import API_URL
 
 class Leaderboard(ctk.CTkFrame):
@@ -29,8 +27,8 @@ class Leaderboard(ctk.CTkFrame):
         title = ctk.CTkLabel(self.right_frame, text="Top 10 Leaderboard", font=("Arial", 28, "bold"), fg_color="white", bg_color="white")
         title.pack(pady=20)
 
-        # Add "Back" button in the top-left of the frame (Only add once)
-        self.back_button = ctk.CTkButton(self.left_frame, text="Back", command=lambda: self.navigate_callback("main_menu"))
+        # Add "Back" button in the top-left of the frame
+        self.back_button = ctk.CTkButton(self.left_frame, text="Back", command=self.navigate_callback("main_menu"))
         self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
     def update_with_student_data(self, student_data):
@@ -59,14 +57,12 @@ class Leaderboard(ctk.CTkFrame):
 
     def display_leaderboard(self, leaderboard_data):
         """
-        Display the leaderboard data in the left frame and right frame.
+        Display the leaderboard data in the left frame.
         """
-        # Clear the left frame first
+        # Clear the left frame first (only remove previous leaderboard labels)
         for widget in self.left_frame.winfo_children():
-            widget.destroy()
-
-        # Add "Back" button in the top-left of the left frame (Only add once)
-        self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+            if isinstance(widget, ctk.CTkLabel):  # Only destroy leaderboard labels
+                widget.destroy()
 
         # Display the top 10 users in the right frame
         for index, student in enumerate(leaderboard_data['leaderboard']):
@@ -83,7 +79,7 @@ class Leaderboard(ctk.CTkFrame):
             label.pack(pady=5)
 
         # Display the surrounding students (3 above, 3 below) in the left frame
-        for index, student in enumerate(leaderboard_data['student_rank']):
+        for student in leaderboard_data['student_rank']:
             name = student['alias']
             points = student['current_points']
             label = ctk.CTkLabel(
@@ -94,4 +90,4 @@ class Leaderboard(ctk.CTkFrame):
                 bg_color="black",
                 text_color="yellow" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "white"
             )
-            label.grid(row=index + 1, column=0, pady=5, padx=10, sticky="w")
+            label.pack(pady=5)
