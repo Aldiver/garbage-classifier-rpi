@@ -26,21 +26,19 @@ class HomePage(ctk.CTkFrame):
         self.scan_text.pack(pady=20)
 
         # Initialize the RFID reader and start scanning
-        self.rfid_reader = RFIDReader()
-        self.rfid_reader.start_scanning()
+        self.rfid_reader = RFIDReader(callback=self.handle_rfid_scan)
+        self.rfid_reader.start()
 
         # Start RFID scanning when the homepage is loaded
         self.check_rfid_loop()
 
-    def check_rfid_loop(self):
-        """Check if a new RFID was scanned and process it."""
-        rfid_number = self.rfid_reader.get_rfid_number()
-        if rfid_number:
-            print(f"Scanned RFID Number: {rfid_number}")
-            self.rfid_reader.rfid_number = None  # Reset after processing
-            self.send_rfid_to_server(rfid_number)
-        # Schedule the next check
-        self.after(1000, self.check_rfid_loop)
+    def handle_rfid_scan(self, rfid_number):
+        """
+        Handle the scanned RFID number.
+        :param rfid_number: The RFID data scanned.
+        """
+        print(f"Scanned RFID Number: {rfid_number}")
+        self.send_rfid_to_server(rfid_number)
 
     def send_rfid_to_server(self, rfid):
         """Send the RFID data to the server and process the response."""

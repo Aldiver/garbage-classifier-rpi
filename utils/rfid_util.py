@@ -2,65 +2,68 @@ import evdev
 import threading
 
 class RFIDReader:
-    """Class to handle RFID scanning in a separate thread and store the last scanned RFID number."""
+    def __init__(self, device_name="IC Reader IC Reader", callback=None):
+        """
+        Initialize the RFID reader.
+        :param device_name: The name of the RFID device as shown in evdev.
+        :param callback: A function to call when an RFID card is scanned.
+        """
+        self.device_name = device_name
+        self.device = None
+        self.callback = callback  # Callback to handle detected RFID
+        self.running = False
 
-    def __init__(self):
-        self.reader_name = "IC Reader IC Reader"
-        self.device = evdev.InputDevice
-        self.rfid_number = None
-        self.authcode = []
-        self.conversion_table = {
-            11: '0', 2: '1', 3: '2', 4: '3', 5: '4',
-            6: '5', 7: '6', 8: '7', 9: '8', 10: '9',
-            28: 'Enter'
-        }
-
-        self.device = self.find_rfid_device()
-
-    def find_rfid_device(self):
-        """Find the RFID reader device."""
+    def find_device(self):
+        """
+        Find the RFID reader device from the list of input devices.
+        """
         devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
         for dev in devices:
-            print(f"Found device: {dev.name}")
-            if dev.name == self.reader_name:
-                return evdev.InputDevice(dev.path)
-        return None
+            if dev.name == self.device_name:
+                self.device = evdev.InputDevice(dev.path)
+                print(f"RFID reader found: {self.device.name} at {self.device.path}")
+                return
+        raise Exception(f"RFID reader '{self.device_name}' not found.")
 
-    def map_input(self, input_event_array):
-        """Convert the event codes into an RFID string."""
-        return ''.join(self.conversion_table[event.code] for event in input_event_array if event.code in self.conversion_table)
-
-    def scan_rfid_loop(self):
-        """Main loop to scan RFID and update `rfid_number`."""
+    def read_loop(self):
+        """
+        Continuously listen for RFID card scans and invoke the callback.
+        """
         if not self.device:
-            print("RFID reader device not found.")
+            print("RFID reader device is not initialized.")
             return
 
-        collected_code = ""  # Clear the last scanned number
-        self.authcode = []
-
+        self.running = True
         try:
+            rfid_data = ""
             for event in self.device.read_loop():
+                if not self.running:
+                    break
+
                 if event.type == evdev.ecodes.EV_KEY:
-                    if event.value == 1 and event.code != 28:  # Key press and not Enter
-                        self.authcode.append(event)
-                    elif event.value == 0:  # Key release
-                        if self.authcode:
-                            input_str = self.map_input(self.authcode)
-                            if input_str is not None:  # Ensure input_str is valid before appending
-                                collected_code += input_str
-                            self.authcode = []
-                        if event.code == 28:  # Enter key signals end of scan
-                            self.rfid_number = collected_code
-                            return self.rfid_number  # Return complete RFID number
+                    key_event = evdev.categorize(event)
+                    if key_event.keystate == evdev.KeyEvent.key_down:
+                        key = evdev.ecodes.KEY[key_event.scancode]
+                        if key == "KEY_ENTER":
+                            if self.callback:
+                                self.callback(rfid_data)  # Invoke callback with RFID data
+                            rfid_data = ""  # Reset for next read
+                        else:
+                            rfid_data += key.lstrip("KEY_").lower()  # Append to RFID data
         except Exception as e:
-            print(f"Error during RFID scanning: {e}")
-            self.rfid_number = None
+            print(f"Error in RFID read loop: {e}")
 
-    def start_scanning(self):
-        """Start a thread that continually scans for RFID."""
-        threading.Thread(target=self.scan_rfid_loop, daemon=True).start()
+    def start(self):
+        """
+        Start the RFID reader loop in a separate thread.
+        """
+        if not self.device:
+            self.find_device()
+        thread = threading.Thread(target=self.read_loop, daemon=True)
+        thread.start()
 
-    def get_rfid_number(self):
-        """Return the current RFID number."""
-        return self.rfid_number
+    def stop(self):
+        """
+        Stop the RFID reader loop.
+        """
+        self.running = False
