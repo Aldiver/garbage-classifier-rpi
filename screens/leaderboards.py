@@ -94,7 +94,6 @@ class Leaderboard(ctk.CTkFrame):
             label.pack(pady=5)
 
         # Display the surrounding students (3 above, 3 below) in the labels_frame
-        row = 0  # Start at the top row of the labels_frame
         for student in leaderboard_data['student_rank']:
             name = student['alias']
             points = student['current_points']
@@ -106,5 +105,4 @@ class Leaderboard(ctk.CTkFrame):
                 bg_color="black",
                 text_color="yellow" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "white"
             )
-            label.grid(row=row, column=0, padx=10, pady=5, sticky="nsew")  # Use grid to ensure labels are centered
-            row += 1  # Move to the next row
+            label.pack(pady=5)  # Center the labels in the frame
