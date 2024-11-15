@@ -41,7 +41,7 @@ class Leaderboard(ctk.CTkFrame):
 
         # Create a new frame for the leaderboard labels inside left_frame
         self.labels_frame = ctk.CTkFrame(self.left_frame)
-        self.labels_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=(10, 0), sticky="nsew")
+        self.labels_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=(10, 0), sticky="nsew")
 
         # Grid configuration for labels_frame to center its content
         self.labels_frame.grid_columnconfigure(0, weight=1)
