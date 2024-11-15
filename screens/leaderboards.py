@@ -27,21 +27,25 @@ class Leaderboard(ctk.CTkFrame):
         title = ctk.CTkLabel(self.right_frame, text="Top 10 Leaderboard", font=("Arial", 28, "bold"), fg_color="white", bg_color="white")
         title.pack(pady=20)
 
+        # Grid configuration for left_frame (30% for button and title, 70% for labels)
+        self.left_frame.grid_rowconfigure(0, weight=1)  # Top 30% for button and title
+        self.left_frame.grid_rowconfigure(1, weight=3)  # Bottom 70% for the labels_frame
+
         # Add "Back" button in the top-left of the frame
         self.back_button = ctk.CTkButton(self.left_frame, text="Back", command=self.navigate_callback("main_menu"))
         self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
+        # Add the title for the left frame
+        self.title_label = ctk.CTkLabel(self.left_frame, text="User Ranking", font=("Arial", 24, "bold"), fg_color="white", bg_color="black", text_color="yellow")
+        self.title_label.grid(row=0, column=1, padx=10, pady=10)
+
         # Create a new frame for the leaderboard labels inside left_frame
         self.labels_frame = ctk.CTkFrame(self.left_frame)
-        self.labels_frame.grid(row=1, column=0, padx=10, pady=(10, 0), sticky="nsew")
+        self.labels_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=(10, 0), sticky="nsew")
 
         # Grid configuration for labels_frame to center its content
         self.labels_frame.grid_columnconfigure(0, weight=1)
         self.labels_frame.grid_rowconfigure(0, weight=1)
-
-        # Add a title to the labels_frame for "User Ranking"
-        self.title_label = ctk.CTkLabel(self.labels_frame, text="User Ranking", font=("Arial", 24, "bold"), fg_color="white", bg_color="black", text_color="yellow")
-        self.title_label.grid(row=0, column=0, padx=10, pady=(10, 10), sticky="nsew")
 
     def update_with_student_data(self, student_data):
         """
@@ -75,12 +79,22 @@ class Leaderboard(ctk.CTkFrame):
         for widget in self.labels_frame.winfo_children():
             widget.destroy()
 
-        # Re-add the title label for "User Ranking"
-        self.title_label = ctk.CTkLabel(self.labels_frame, text="User Ranking", font=("Arial", 24, "bold"), fg_color="white", bg_color="black", text_color="yellow")
-        self.title_label.grid(row=0, column=0, padx=10, pady=(10, 10), sticky="nsew")
+        # Display the top 10 users in the right frame
+        for index, student in enumerate(leaderboard_data['leaderboard']):
+            name = student['alias']
+            points = student['current_points']
+            label = ctk.CTkLabel(
+                self.right_frame,
+                text=f"{index + 1}. {name} -> {points}",  # Use index + 1 for ranking
+                font=("Arial", 24),
+                fg_color="black",
+                bg_color="black",
+                text_color="yellow" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "white"  # Highlight user
+            )
+            label.pack(pady=5)
 
         # Display the surrounding students (3 above, 3 below) in the labels_frame
-        row = 1  # Start adding labels below the title
+        row = 0  # Start at the top row of the labels_frame
         for student in leaderboard_data['student_rank']:
             name = student['alias']
             points = student['current_points']
@@ -92,5 +106,5 @@ class Leaderboard(ctk.CTkFrame):
                 bg_color="black",
                 text_color="yellow" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "white"
             )
-            label.grid(row=row, column=0, padx=10, pady=5, sticky="nsew")  # Use grid for labels inside labels_frame
+            label.grid(row=row, column=0, padx=10, pady=5, sticky="nsew")  # Use grid to ensure labels are centered
             row += 1  # Move to the next row
