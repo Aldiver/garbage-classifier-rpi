@@ -5,7 +5,7 @@ class RFIDReader:
     """Class to handle RFID scanning in a separate thread and store the last scanned RFID number."""
 
     def __init__(self):
-        self.reader_name = "Sycreader RFID Technology Co., Ltd SYC ID&IC USB Reader"
+        self.reader_name = "IC Reader IC Reader"
         self.device = evdev.InputDevice
         self.rfid_number = None
         self.authcode = []

@@ -46,16 +46,16 @@ class DisposeWaste(ctk.CTkFrame):
         self.detection_label.pack(pady=20)
 
         # Bin level display
-        # self.bin_labels = []
-        # for i in range(3):
-        #     label = ctk.CTkLabel(self.right_frame, text=f"Bin {i+1} Level: 0%", font=("Arial", 16), bg_color="black", fg_color="white")
-        #     label.pack()
-        #     self.bin_labels.append(label)
+        self.bin_labels = []
+        for i in range(3):
+            label = ctk.CTkLabel(self.right_frame, text=f"Bin {i+1} Level: 0%", font=("Arial", 16), bg_color="black", fg_color="white")
+            label.pack()
+            self.bin_labels.append(label)
 
-        # for label in self.bin_labels:
-        #     label.pack()
+        for label in self.bin_labels:
+            label.pack()
 
-        # self.update_bin_levels()
+        self.update_bin_levels()
 
     def get_main_category(self, detection_type):
         for main_category, items in subcategories.items():
@@ -63,12 +63,12 @@ class DisposeWaste(ctk.CTkFrame):
                 return main_category
         return None
 
-    # def update_bin_levels(self):
-    #     for i, sensor in enumerate(ultrasonic_sensors):
-    #         distance = get_distance(sensor)
-    #         bin_level = calculate_bin_level(distance)
-    #         self.bin_labels[i].configure(text=f"Bin {i+1} Level: {bin_level}%")
-    #         print(f"Bin {i+1} Level: {bin_level}% (Distance: {distance} cm)")
+    def update_bin_levels(self):
+        for i, sensor in enumerate(ultrasonic_sensors):
+            distance = get_distance(sensor)
+            bin_level = calculate_bin_level(distance)
+            self.bin_labels[i].configure(text=f"Bin {i+1} Level: {bin_level}%")
+            print(f"Bin {i+1} Level: {bin_level}% (Distance: {distance} cm)")
 
     def start_detection(self):
         self.update()
@@ -111,7 +111,7 @@ class DisposeWaste(ctk.CTkFrame):
             move_servo(bin_index * 4, 0)
             distance = get_distance(ultrasonic_sensor)
             bin_level = calculate_bin_level(distance)
-            # self.bin_labels[bin_index].configure(text=f"Bin {bin_index+1} Level: {bin_level}%")
+            self.bin_labels[bin_index].configure(text=f"Bin {bin_index+1} Level: {bin_level}%")
             print(f"Bin {bin_index+1} Level: {bin_level}%")
 
             if not object_detected:
@@ -127,8 +127,8 @@ class DisposeWaste(ctk.CTkFrame):
         if not self.video_feed_initialized:
             print("Initializing video feed...")
             self.video_feed_initialized = True
-            # self.video_feed = tk.Label(self.left_frame)
-            # self.video_feed.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+            self.video_feed = tk.Label(self.left_frame)
+            self.video_feed.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         for frame, detection_result in detect.start_detection():
             print("Detecting")
@@ -136,7 +136,7 @@ class DisposeWaste(ctk.CTkFrame):
                 break
 
             if detection_result.detections:
-                # self.after(50, self.update_camera_feed, frame)
+                self.after(50, self.update_camera_feed, frame)
                 print("checking results")
                 for detection in detection_result.detections:
                     for category in detection.categories:
