@@ -30,7 +30,7 @@ class Leaderboard(ctk.CTkFrame):
         title.pack(pady=20)
 
         # Add "Back" button in the top-left of the frame (Only add once)
-        self.back_button = ctk.CTkButton(self.left_frame, text="Back", command=self.navigate_callback("main_menu"))
+        self.back_button = ctk.CTkButton(self.left_frame, text="Back", command=lambda: self.navigate_callback("main_menu"))
         self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
     def update_with_student_data(self, student_data):
