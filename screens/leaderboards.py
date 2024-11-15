@@ -35,6 +35,14 @@ class Leaderboard(ctk.CTkFrame):
         self.labels_frame = ctk.CTkFrame(self.left_frame)
         self.labels_frame.grid(row=1, column=0, padx=10, pady=(10, 0), sticky="nsew")
 
+        # Grid configuration for labels_frame to center its content
+        self.labels_frame.grid_columnconfigure(0, weight=1)
+        self.labels_frame.grid_rowconfigure(0, weight=1)
+
+        # Add a title to the labels_frame for "User Ranking"
+        self.title_label = ctk.CTkLabel(self.labels_frame, text="User Ranking", font=("Arial", 24, "bold"), fg_color="white", bg_color="black", text_color="yellow")
+        self.title_label.grid(row=0, column=0, padx=10, pady=(10, 10), sticky="nsew")
+
     def update_with_student_data(self, student_data):
         """
         Update the leaderboard with student data fetched from an API.
@@ -67,21 +75,12 @@ class Leaderboard(ctk.CTkFrame):
         for widget in self.labels_frame.winfo_children():
             widget.destroy()
 
-        # Display the top 10 users in the right frame
-        for index, student in enumerate(leaderboard_data['leaderboard']):
-            name = student['alias']
-            points = student['current_points']
-            label = ctk.CTkLabel(
-                self.right_frame,
-                text=f"{index + 1}. {name} -> {points}",  # Use index + 1 for ranking
-                font=("Arial", 24),
-                fg_color="black",
-                bg_color="black",
-                text_color="yellow" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "white"  # Highlight user
-            )
-            label.pack(pady=5)
+        # Re-add the title label for "User Ranking"
+        self.title_label = ctk.CTkLabel(self.labels_frame, text="User Ranking", font=("Arial", 24, "bold"), fg_color="white", bg_color="black", text_color="yellow")
+        self.title_label.grid(row=0, column=0, padx=10, pady=(10, 10), sticky="nsew")
 
         # Display the surrounding students (3 above, 3 below) in the labels_frame
+        row = 1  # Start adding labels below the title
         for student in leaderboard_data['student_rank']:
             name = student['alias']
             points = student['current_points']
@@ -93,4 +92,5 @@ class Leaderboard(ctk.CTkFrame):
                 bg_color="black",
                 text_color="yellow" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "white"
             )
-            label.pack(pady=5)
+            label.grid(row=row, column=0, padx=10, pady=5, sticky="nsew")  # Use grid for labels inside labels_frame
+            row += 1  # Move to the next row
