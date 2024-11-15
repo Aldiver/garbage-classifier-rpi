@@ -70,18 +70,19 @@ class Leaderboard(ctk.CTkFrame):
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Display the top 10 users in the left frame
-        for i, student in leaderboard_data['leaderboard']:
+        for index, student in enumerate(leaderboard_data['leaderboard']):
             name = student['alias']
             points = student['current_points']
             label = ctk.CTkLabel(
                 self.right_frame,
-                text=f"{i}. {name} -> {points}",
+                text=f"{index + 1}. {name} -> {points}",  # Use index + 1 for ranking
                 font=("Arial", 24),
                 fg_color="black",
                 bg_color="black",
                 text_color="yellow" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "white"  # Highlight user
             )
             label.pack(pady=5)
+
 
         # Display the surrounding students (3 above, 3 below)
         for student in leaderboard_data['student_rank']:
