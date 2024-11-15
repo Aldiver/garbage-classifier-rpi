@@ -213,6 +213,7 @@ class DisposeWaste(ctk.CTkFrame):
         self.video_feed.image = imgtk
 
     def update_with_student_data(self, student_data):
+        print(f"{student_data}")
         self.student = student_data
 
     def show_success_modal(self, response):

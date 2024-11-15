@@ -5,6 +5,7 @@ import random
 class Leaderboard(ctk.CTkFrame):
     def __init__(self, parent, navigate_callback, user_rank, all_users):
         super().__init__(parent)
+        self.student = None
 
         # Store the navigation callback
         self.navigate_callback = navigate_callback
