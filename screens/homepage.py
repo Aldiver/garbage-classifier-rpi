@@ -7,11 +7,12 @@ from utils.utils import API_URL
 
 
 class HomePage(ctk.CTkFrame):
-    def __init__(self, parent, navigate_callback):
+    def __init__(self, parent, navigate_callback, set_student_data_callback):
         super().__init__(parent)
 
         # Store the navigation callback
         self.navigate_callback = navigate_callback
+        self.set_student_data = set_student_data_callback
 
         # Layout configuration
         self.grid_rowconfigure(0, weight=1)
@@ -62,13 +63,41 @@ class HomePage(ctk.CTkFrame):
             self.show_error_modal(f"Error contacting server: {e}")
 
     def show_success_modal(self, message, student):
-        """Display a success modal, then navigate after 2 seconds."""
-        messagebox.showinfo("Success", message)
-        self.after(500, lambda: self.navigate_callback("main_menu", student_data=student))
+        """
+        Display a success modal with a 200x200 size, then navigate after 2 seconds.
+        """
+        modal = ctk.CTkToplevel(self)
+        modal.title("Success")
+        modal.geometry("200x200")
+
+        label = ctk.CTkLabel(modal, text=message, wraplength=180, justify="center")
+        label.pack(pady=20)
+
+        ok_button = ctk.CTkButton(
+            modal, text="OK",
+            command=lambda: [
+                modal.destroy(),
+                self.set_student_data(student),
+                self.after(500, lambda: self.navigate_callback("main_menu"))
+            ]
+        )
+        ok_button.pack(pady=10)
+
 
     def show_error_modal(self, message):
-        """Display an error modal."""
-        messagebox.showerror("Error", message)
+        """
+        Display an error modal with a 200x200 size.
+        """
+        modal = ctk.CTkToplevel(self)
+        modal.title("Error")
+        modal.geometry("200x200")
+
+        label = ctk.CTkLabel(modal, text=message, wraplength=180, justify="center")
+        label.pack(pady=20)
+
+        ok_button = ctk.CTkButton(modal, text="OK", command=modal.destroy)
+        ok_button.pack(pady=10)
+
 
     def show_add_student_modal(self, rfid):
         """Show a modal to add a student if RFID is not found."""

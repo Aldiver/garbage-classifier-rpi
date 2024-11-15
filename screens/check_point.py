@@ -14,12 +14,11 @@ class CheckPoints(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
 
         # Points Display
-        self.points_circle = ctk.CTkLabel(self, text=str(points), font=("Arial", 60), bg_color="black", fg_color="white")
+        self.points_circle = ctk.CTkLabel(self, text=str(0), font=("Arial", 60), bg_color="black", fg_color="white")
         self.points_circle.pack(expand=True)
 
         # Greeting Label
-        points_text = "points" if points != 1 else "point"
-        self.greeting = ctk.CTkLabel(self, text=f"Hello {username}, this is your current {points_text}.", font=("Arial", 24), fg_color="white", bg_color="black")
+        self.greeting = ctk.CTkLabel(self, text=f"Loading Data", font=("Arial", 24), fg_color="white", bg_color="black")
         self.greeting.pack(pady=20)
 
         # Info Label
@@ -41,5 +40,6 @@ class CheckPoints(ctk.CTkFrame):
         self.points_circle.configure(text=str(student_data['current_points']))
         student_info = f"Hello {student_data['first_name']} {student_data['last_name']}, this is your current point/s."
         self.greeting.configure(text=student_info)
+        self.update()
 
         self.info_label.configure(text=f"Student ID: {student_data['id']}")

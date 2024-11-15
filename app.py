@@ -38,7 +38,7 @@ class App(ctk.CTk):
         user_rank = 25
 
         # Create and store each frame, passing the navigation callback
-        self.pages["homepage"] = HomePage(self, self.show_frame)
+        self.pages["homepage"] = HomePage(self, self.show_frame, self.set_student_data)
         self.pages["main_menu"] = MainMenu(self, self.show_frame)
         self.pages["check_points"] = CheckPoints(self, self.show_frame, username="", points=0)
         self.pages["leaderboard"] = Leaderboard(self, self.show_frame, user_rank=user_rank, all_users=all_users)
@@ -48,14 +48,13 @@ class App(ctk.CTk):
         for frame_name, frame in self.pages.items():
             frame.grid(row=0, column=0, sticky="nsew")
 
-    def show_frame(self, frame_name, student_data=None):
+    def show_frame(self, frame_name):
         # Hide all frames
         for frame in self.pages.values():
             frame.grid_forget()
 
-        # Update student data if provided
-        if student_data:
-            self.student_data = student_data
+        if frame_name == "homepage":
+            self.student_data = None
 
         # Pass the student data to the frame if needed
         frame = self.pages[frame_name]
@@ -63,18 +62,21 @@ class App(ctk.CTk):
             if hasattr(frame, 'update_with_student_data'):
                 frame.update_with_student_data(self.student_data)
 
-        # Track the current frame being shown
         self.current_frame = frame_name
 
-        # Trigger frame-specific processes
-        # if frame_name == "homepage":
-        #     self.pages["homepage"].scan_rfid()  # Start scanning RFID when homepage is shown
         if frame_name == "dispose_waste":
             self.pages["dispose_waste"].start_detection()  # Run object detection for dispose_waste
             # TODO: Implement the object detection method in DisposeWaste
 
         # Show the requested frame
         frame.grid(row=0, column=0, sticky="nsew")
+
+    def set_student_data(self, student_data):
+        """
+        Update the current student data and trigger navigation if needed.
+        """
+        self.student_data = student_data
+        print(f"Student data updated: {self.student_data}")
 
 if __name__ == "__main__":
     # Initialize customtkinter appearance
