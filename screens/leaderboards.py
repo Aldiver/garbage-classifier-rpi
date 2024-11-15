@@ -65,13 +65,17 @@ class Leaderboard(ctk.CTkFrame):
         for widget in self.left_frame.winfo_children():
             widget.destroy()
 
+        # Add "Back" button in the top-left of the frame
+        back_button = ctk.CTkButton(self.left_frame, text="Back", command=self.navigate_callback(("main_menu")))
+        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
         # Display the top 10 users in the left frame
-        for student in leaderboard_data['leaderboard']:
+        for i, student in leaderboard_data['leaderboard']:
             name = student['alias']
             points = student['current_points']
             label = ctk.CTkLabel(
-                self.left_frame,
-                text=f"{student['rank']}. {name} -> {points}",
+                self.right_frame,
+                text=f"{i}. {name} -> {points}",
                 font=("Arial", 24),
                 fg_color="black",
                 bg_color="black",
