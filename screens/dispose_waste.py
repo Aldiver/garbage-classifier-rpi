@@ -137,6 +137,7 @@ class DisposeWaste(ctk.CTkFrame):
         Updates points by making a request to the server with the student's RFID.
         Returns the response or raises an exception if the request fails.
         """
+        print(f"API fetch: {self.student_data}")
         url = f"{API_URL}/update-points/{self.student.rfid}"
         try:
             response = requests.get(url)
@@ -213,7 +214,6 @@ class DisposeWaste(ctk.CTkFrame):
         self.video_feed.image = imgtk
 
     def update_with_student_data(self, student_data):
-        print(f"{student_data}")
         self.student = student_data
 
     def show_success_modal(self, response):
