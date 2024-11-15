@@ -41,7 +41,7 @@ class App(ctk.CTk):
         self.pages["homepage"] = HomePage(self, self.show_frame, self.set_student_data)
         self.pages["main_menu"] = MainMenu(self, self.show_frame)
         self.pages["check_points"] = CheckPoints(self, self.show_frame, username="", points=0)
-        self.pages["leaderboard"] = Leaderboard(self, self.show_frame, user_rank=user_rank, all_users=all_users)
+        self.pages["leaderboard"] = Leaderboard(self, self.show_frame, None)
         self.pages["dispose_waste"] = DisposeWaste(self, self.show_frame)
 
         # Place each frame in the root window

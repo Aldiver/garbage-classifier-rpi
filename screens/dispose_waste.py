@@ -140,8 +140,7 @@ class DisposeWaste(ctk.CTkFrame):
         print(f"API fetch: {self.student_data}")
         url = f"{API_URL}/update-points/{self.student.rfid}"
         try:
-            response = requests.get(url)
-            return response
+            return requests.get(url)
         except requests.RequestException as e:
             # Handle request exceptions (e.g., network failure)
             self.show_error_modal(f"Error contacting server: {e}", retry_callback=self.update_points)
