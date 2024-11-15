@@ -138,7 +138,7 @@ class DisposeWaste(ctk.CTkFrame):
         Returns the response or raises an exception if the request fails.
         """
         print(f"API fetch: {self.student}")
-        url = f"{API_URL}/update-points/{self.student.rfid}"
+        url = f"{API_URL}/update-points/{self.student['rfid']}"
         try:
             return requests.get(url)
         except requests.RequestException as e:
