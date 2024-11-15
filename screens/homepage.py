@@ -4,6 +4,7 @@ from tkinter import messagebox
 import requests
 from utils.rfid_util import RFIDReader
 from utils.utils import API_URL
+from PIL import Image
 
 
 class HomePage(ctk.CTkFrame):
@@ -20,11 +21,12 @@ class HomePage(ctk.CTkFrame):
 
         # Center frame
         self.frame = ctk.CTkFrame(self)
-        self.frame.grid(row=0, column=0, padx=10, pady=(20, 20), sticky="nsew")
+        self.frame.grid(row=0, column=0, padx=10, pady=(10, 10), sticky="nsew")
 
-        # RFID Text
-        self.scan_text = ctk.CTkLabel(self.frame, text="Scan your RFID", font=("Arial", 24), bg_color="black", fg_color="white")
-        self.scan_text.pack(pady=20)
+        # RFID image
+        self.rfid_image = ctk.CTkImage(light_image=Image.open("images/homepage.png"), size=(1280, 720))
+        self.rfid_label = ctk.CTkLabel(self.frame, image=self.rfid_image, text="")  # Empty text to display only the image
+        self.rfid_label.place(relx=0.5, rely=0.5, anchor="center")  # Center the RFID image
 
         # Initialize the RFID reader and start scanning
         self.rfid_reader = RFIDReader(callback=self.handle_rfid_scan)
