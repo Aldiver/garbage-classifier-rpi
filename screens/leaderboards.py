@@ -30,6 +30,7 @@ class Leaderboard(ctk.CTkFrame):
         # Grid configuration for left_frame (30% for button and title, 70% for labels)
         self.left_frame.grid_rowconfigure(0, weight=1)  # Top 30% for button and title
         self.left_frame.grid_rowconfigure(1, weight=3)  # Bottom 70% for the labels_frame
+        self.left_frame.grid_columnconfigure(1, weight=1)
 
         # Add "Back" button in the top-left of the frame
         self.back_button = ctk.CTkButton(self.left_frame, text="Back", command=self.navigate_callback("main_menu"))
@@ -37,7 +38,7 @@ class Leaderboard(ctk.CTkFrame):
 
         # Add the title for the left frame
         self.title_label = ctk.CTkLabel(self.left_frame, text="User Ranking", font=("Arial", 24, "bold"), fg_color="white", bg_color="black", text_color="yellow")
-        self.title_label.grid(row=0, column=1, weigh=1, padx=10, pady=10)
+        self.title_label.grid(row=0, column=1, padx=10, pady=10)
 
         # Create a new frame for the leaderboard labels inside left_frame
         self.labels_frame = ctk.CTkFrame(self.left_frame)
