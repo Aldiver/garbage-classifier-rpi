@@ -67,7 +67,7 @@ class DisposeWaste(ctk.CTkFrame):
             fg_color="#003a6c",
             command=lambda: navigate_callback("main_menu"),
         )
-        self.skip_button.pack(side=tk.BOTTOM, pady=(0, 20))
+        self.back_button.pack(side=tk.BOTTOM, pady=(0, 20))
 
         self.update_bin_levels()
 
