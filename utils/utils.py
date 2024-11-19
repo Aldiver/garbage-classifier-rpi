@@ -9,6 +9,7 @@ def center_modal(window, modal_width, modal_height):
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
 
+    print(f"Screen Width = {screen_width} \n Screen Height = {screen_height}")
     # Calculate the position to center the modal
     position_top = (screen_height // 2) - (modal_height // 2)
     position_left = (screen_width // 2) - (modal_width // 2)
