@@ -33,7 +33,7 @@ class Leaderboard(ctk.CTkFrame):
         self.left_frame.grid_columnconfigure(1, weight=1)
 
         # Add "Back" button in the top-left of the frame
-        self.back_button = ctk.CTkButton(self.left_frame, fg_color="white",text_color="black", btext="Back", command=self.navigate_callback("main_menu"))
+        self.back_button = ctk.CTkButton(self.left_frame, fg_color="white",text_color="black", text="Back", command=self.navigate_callback("main_menu"))
         self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Add the title for the left frame
