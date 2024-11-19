@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from PIL import Image, ImageTk
 
-class TestMainMenu(ctk.CTkFrame):
+class MainMenu(ctk.CTkFrame):
     def __init__(self, parent, navigate_callback):
         super().__init__(parent, fg_color="#0077B6")
 
