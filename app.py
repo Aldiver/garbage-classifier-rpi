@@ -66,8 +66,6 @@ class App(ctk.CTk):
             self.pages["homepage"].start_scanning()  # Run object detection for dispose_waste
         elif frame_name == "dispose_waste":
             self.pages["dispose_waste"].start_detection()  # Run object detection for dispose_waste
-        elif frame_name == "leaderboard":
-            self.pages["leaderboard"].navigate_homepage()
 
         # Show the requested frame
         frame.grid(row=0, column=0, sticky="nsew")
