@@ -33,13 +33,16 @@ class HomePage(ctk.CTkFrame):
 
         # Start RFID scanning when the homepage is loaded
 
+    def start_scanning(self):
+        self.rfid_reader.start()
+
     def handle_rfid_scan(self, rfid_number):
         """
         Handle the scanned RFID number.
         :param rfid_number: The RFID data scanned.
         """
         print(f"Scanned RFID Number: {rfid_number}")
-        self.rfid_reader.start()
+
         self.send_rfid_to_server(rfid_number)
 
     def send_rfid_to_server(self, rfid):

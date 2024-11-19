@@ -63,7 +63,7 @@ class App(ctk.CTk):
 
         if frame_name == "homepage":
             self.student_data = None
-            self.pages["homepage"].handle_rfid_scan()  # Run object detection for dispose_waste
+            self.pages["homepage"].start_scanning()  # Run object detection for dispose_waste
         elif frame_name == "dispose_waste":
             self.pages["dispose_waste"].start_detection()  # Run object detection for dispose_waste
         elif frame_name == "leaderboard":
