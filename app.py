@@ -53,9 +53,6 @@ class App(ctk.CTk):
         for frame in self.pages.values():
             frame.grid_forget()
 
-        if frame_name == "homepage":
-            self.student_data = None
-
         # Pass the student data to the frame if needed
         frame = self.pages[frame_name]
         if self.student_data:
@@ -64,9 +61,13 @@ class App(ctk.CTk):
 
         self.current_frame = frame_name
 
-        if frame_name == "dispose_waste":
+        if frame_name == "homepage":
+            self.student_data = None
+            self.pages["homepage"].handle_rfid_scan()  # Run object detection for dispose_waste
+        elif frame_name == "dispose_waste":
             self.pages["dispose_waste"].start_detection()  # Run object detection for dispose_waste
-            # TODO: Implement the object detection method in DisposeWaste
+        elif frame_name == "leaderboard":
+            self.pages["leaderboard"].navigate_homepage()
 
         # Show the requested frame
         frame.grid(row=0, column=0, sticky="nsew")

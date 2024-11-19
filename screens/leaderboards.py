@@ -33,7 +33,7 @@ class Leaderboard(ctk.CTkFrame):
         self.left_frame.grid_columnconfigure(1, weight=1)
 
         # Add "Back" button in the top-left of the frame
-        self.back_button = ctk.CTkButton(self.left_frame, fg_color="white",text_color="black", text="Back", command=self.navigate_callback("main_menu"))
+        self.back_button = ctk.CTkButton(self.left_frame, fg_color="white", text_color="black", text="Back", command=self.on_back_button_click)
         self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Add the title for the left frame
@@ -47,6 +47,29 @@ class Leaderboard(ctk.CTkFrame):
         # Grid configuration for labels_frame to center its content
         self.labels_frame.grid_columnconfigure(0, weight=1)
         self.labels_frame.grid_rowconfigure(0, weight=1)
+
+        # Start the timer to navigate to the homepage if not clicked within 5 seconds
+        self.navigate_timer = None
+
+    def on_back_button_click(self):
+        """
+        This method is called when the 'Back' button is clicked.
+        It cancels the timer and navigates back to the main menu.
+        """
+        try:
+            if self.navigate_timer is not None:  # Ensure the timer is not None
+                self.after_cancel(self.navigate_timer)  # Cancel the navigate timer
+                self.navigate_timer = None
+            self.navigate_callback("main_menu")  # Navigate to the main menu
+        except Exception as e:
+            print(f"Error in on_back_button_click: {e}")  # Log the error to console
+            # Optionally, add a fallback or error message for the user if needed
+
+    def navigate_homepage(self):
+        """
+        This method automatically navigates to the homepage after 5 seconds if the 'Back' button is not clicked.
+        """
+        self.after(5000, self.navigate_callback("homepage"))
 
     def update_with_student_data(self, student_data):
         """
