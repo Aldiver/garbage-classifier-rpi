@@ -65,6 +65,13 @@ class Leaderboard(ctk.CTkFrame):
             print(f"Error in on_back_button_click: {e}")  # Log the error to console
             # Optionally, add a fallback or error message for the user if needed
 
+    def navigate_homepage(self):
+        """
+        This method automatically navigates to the homepage after 5 seconds if the 'Back' button is not clicked.
+        """
+        print(f"Leaderboards page. Waiting for input")
+        self.navigate_timer = self.after(5000, lambda: self.navigate_callback("homepage"))
+
     def update_with_student_data(self, student_data):
         """
         Update the leaderboard with student data fetched from an API.
@@ -84,7 +91,6 @@ class Leaderboard(ctk.CTkFrame):
             if response.status_code == 200:
                 leaderboard_data = response.json()
                 self.display_leaderboard(leaderboard_data)
-                self.after(5000, self.navigate_callback("homepage"))
             else:
                 print(f"Error: {response.json()['message']}")
         except Exception as e:
@@ -121,3 +127,5 @@ class Leaderboard(ctk.CTkFrame):
                 text_color="#003a6c" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "black"
             )
             label.pack(pady=5)  # Center the labels in the frame
+        #start
+        self.navigate_homepage()
