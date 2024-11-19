@@ -31,11 +31,35 @@ class MainMenu(ctk.CTkFrame):
         self.dispose_waste_icon = ctk.CTkLabel(self.right_frame,text_color="white", text="Dispose Waste", font=("Arial", 36))
         self.dispose_waste_icon.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         self.dispose_waste_icon.bind("<Button-1>", self.on_dispose_waste_click)  # Also make the label clickable
+        self.navigate_timer = None
 
     def on_show_points_click(self, event):
         """Navigate to the Check Points screen."""
-        self.navigate_callback("check_points")
+        try:
+            if self.navigate_timer is not None:  # Ensure the timer is not None
+                self.after_cancel(self.navigate_timer)  # Cancel the navigate timer
+                self.navigate_timer = None
+            self.navigate_callback("check_points")  # Navigate to the main menu
+        except Exception as e:
+            print(f"Error in on_back_button_click: {e}")  # Log the error to console
+            # Optionally, add a fallback or error message for the user if needed
+
 
     def on_dispose_waste_click(self, event):
         """Navigate to the Dispose Waste screen."""
-        self.navigate_callback("dispose_waste")
+        try:
+            if self.navigate_timer is not None:  # Ensure the timer is not None
+                self.after_cancel(self.navigate_timer)  # Cancel the navigate timer
+                self.navigate_timer = None
+            self.navigate_callback("dispose_waste")
+        except Exception as e:
+            print(f"Error in on_back_button_click: {e}")  # Log the error to console
+            # Optionally, add a fallback or error message for the user if needed
+
+
+    def navigate_homepage(self):
+        """
+        This method automatically navigates to the homepage after 5 seconds if the 'Back' button is not clicked.
+        """
+        print(f"Leaderboards page. Waiting for input")
+        self.navigate_timer = self.after(15000, lambda: self.navigate_callback("homepage"))
