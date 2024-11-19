@@ -11,7 +11,7 @@ import threading
 from utils.ir_util import get_sensor_value, sensor1, sensor2, sensor3
 from utils.servo_util import move_servo
 from utils.ultrasonic_util import get_distance, calculate_bin_level, ultrasonic_sensors
-from utils.utils import API_URL
+from utils.utils import API_URL, center_modal
 
 subcategories = {
     'Biodegradeable': ['Wooden Utensils', 'Paper', 'Paper Food Packages'],
@@ -233,7 +233,14 @@ class DisposeWaste(ctk.CTkFrame):
         current_points = data.get('current_points', 0)
         modal = ctk.CTkToplevel(self)
         modal.title("Success")
-        modal.geometry("200x200")
+
+        # Set the modal size
+        modal_width = 200
+        modal_height = 200
+
+        # Get the centered position using the utility function
+        position_left, position_top = center_modal(self, modal_width, modal_height)
+        modal.geometry(f"{modal_width}x{modal_height}+{position_left}+{position_top}")
 
         label = ctk.CTkLabel(modal, text=message, wraplength=180, justify="center")
         label.pack(pady=20)
@@ -250,7 +257,14 @@ class DisposeWaste(ctk.CTkFrame):
         """
         modal = ctk.CTkToplevel(self)
         modal.title("Error")
-        modal.geometry("200x200")
+
+        # Set the modal size
+        modal_width = 200
+        modal_height = 200
+
+        # Get the centered position using the utility function
+        position_left, position_top = center_modal(self, modal_width, modal_height)
+        modal.geometry(f"{modal_width}x{modal_height}+{position_left}+{position_top}")
 
         label = ctk.CTkLabel(modal, text=message, wraplength=180, justify="center")
         label.pack(pady=20)

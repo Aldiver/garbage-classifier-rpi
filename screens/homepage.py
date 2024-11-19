@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import messagebox
 import requests
 from utils.rfid_util import RFIDReader
-from utils.utils import API_URL
+from utils.utils import API_URL, center_modal
 from PIL import Image
 
 
@@ -73,7 +73,13 @@ class HomePage(ctk.CTkFrame):
         """
         modal = ctk.CTkToplevel(self)
         modal.title("Success")
-        modal.geometry("200x200")
+
+        # Set the modal size
+        modal_width = 200
+        modal_height = 200
+
+        # Get the centered position using the utility function
+        position_left, position_top = center_modal(self, modal_width, modal_height)
 
         label = ctk.CTkLabel(modal, text=message, wraplength=180, justify="center")
         label.pack(pady=20)
@@ -95,7 +101,14 @@ class HomePage(ctk.CTkFrame):
         """
         modal = ctk.CTkToplevel(self)
         modal.title("Error")
-        modal.geometry("200x200")
+
+        # Set the modal size
+        modal_width = 200
+        modal_height = 200
+
+        # Get the centered position using the utility function
+        position_left, position_top = center_modal(self, modal_width, modal_height)
+        modal.geometry(f"{modal_width}x{modal_height}+{position_left}+{position_top}")
 
         label = ctk.CTkLabel(modal, text=message, wraplength=180, justify="center")
         label.pack(pady=20)
@@ -108,7 +121,14 @@ class HomePage(ctk.CTkFrame):
         """Show a modal to add a student if RFID is not found."""
         modal = ctk.CTkToplevel(self)
         modal.title("No Record Found")
-        modal.geometry("400x400")
+
+        # Set the modal size
+        modal_width = 400
+        modal_height = 400
+
+        # Get the centered position using the utility function
+        position_left, position_top = center_modal(self, modal_width, modal_height)
+        modal.geometry(f"{modal_width}x{modal_height}+{position_left}+{position_top}")
 
         label = ctk.CTkLabel(modal, text="No record found, do you want to add this student?")
         label.pack(pady=10)
@@ -126,7 +146,14 @@ class HomePage(ctk.CTkFrame):
         # Create a new modal for adding the student
         form_modal = ctk.CTkToplevel(self)
         form_modal.title("Add Student")
-        form_modal.geometry("400x450")  # Adjust modal size if needed
+
+        # Set the modal size
+        modal_width = 400
+        modal_height = 450
+
+        # Get the centered position using the utility function
+        position_left, position_top = center_modal(self, modal_width, modal_height)
+        modal.geometry(f"{modal_width}x{modal_height}+{position_left}+{position_top}")
 
         # Configure grid layout with padding
         form_modal.columnconfigure(0, weight=1)
