@@ -13,8 +13,9 @@ class App(ctk.CTk):
         super().__init__()
 
         self.title("Navigation Example")
-        self.geometry("1280x720")
+        # self.geometry("1280x720")
         self.attributes("-fullscreen", True)
+        self.resizable(False, False)  # Prevent resizing the main window
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
