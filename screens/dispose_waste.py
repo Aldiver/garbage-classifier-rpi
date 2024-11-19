@@ -105,7 +105,7 @@ class DisposeWaste(ctk.CTkFrame):
         sensors = {
             "Recyclable": (sensor1, 0, ultrasonic_sensors[0]),
             "Residual": (sensor2, 1, ultrasonic_sensors[1]),
-            "Biodegradable": (sensor3, 2, ultrasonic_sensors[2])
+            "Biodegradeable": (sensor3, 2, ultrasonic_sensors[2])
         }
         if main_category:
             sensor, bin_index, ultrasonic_sensor = sensors[main_category]
