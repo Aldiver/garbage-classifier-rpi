@@ -61,5 +61,6 @@ class MainMenu(ctk.CTkFrame):
         """
         This method automatically navigates to the homepage after 5 seconds if the 'Back' button is not clicked.
         """
+        self.update()
         print(f"Leaderboards page. Waiting for input")
         self.navigate_timer = self.after(15000, lambda: self.navigate_callback("homepage"))
