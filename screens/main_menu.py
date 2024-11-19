@@ -19,7 +19,7 @@ class MainMenu(ctk.CTkFrame):
         self.left_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
         self.left_frame.bind("<Button-1>", self.on_show_points_click)  # Bind click event to the left frame
 
-        self.show_points_icon = ctk.CTkLabel(self.left_frame, text="Show Points", font=("Arial", 36))
+        self.show_points_icon = ctk.CTkLabel(self.left_frame, text_color="black", text="Show Points", font=("Arial", 36))
         self.show_points_icon.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         self.show_points_icon.bind("<Button-1>", self.on_show_points_click)  # Also make the label clickable
 

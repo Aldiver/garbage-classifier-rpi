@@ -47,7 +47,7 @@ class DisposeWaste(ctk.CTkFrame):
         self.status_label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         # Detection label
-        self.detection_label = ctk.CTkLabel(self.right_frame, text="n/a", font=("Arial", 24), fg_color="black", bg_color="white")
+        self.detection_label = ctk.CTkLabel(self.right_frame, text="n/a", font=("Arial", 24), text_color="black")
         self.detection_label.pack(pady=20)
 
         # Bin level display
