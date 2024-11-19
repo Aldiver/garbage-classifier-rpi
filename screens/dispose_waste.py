@@ -14,10 +14,10 @@ from utils.ultrasonic_util import get_distance, calculate_bin_level, ultrasonic_
 from utils.utils import API_URL
 
 subcategories = {
-        'Biodegradable': ['chopsticks', 'leaf', 'toothpick', 'Wooden Utensils', 'Juice Box', 'Paper Food Packages'],
-        'Recyclable': ['cardboard', 'glass', 'metal', 'paper', 'plastic'],
-        'Residual': ['bandaid', 'diapers', 'milkbox', 'napkin', 'pen', 'plasticene', 'rag', 'toothbrush', 'toothpastetube']
-    }
+    'Biodegradeable': ['Wooden Utensils', 'Paper', 'Paper Food Packages'],
+    'Recyclable': ['Juice Box', 'Box', 'Metal', 'Plastic'],
+    'Residual': ['Pen', 'Rag']
+}
 
 class DisposeWaste(ctk.CTkFrame):
     def __init__(self, parent, navigate_callback):
@@ -59,6 +59,15 @@ class DisposeWaste(ctk.CTkFrame):
 
         for label in self.bin_labels:
             label.pack()
+
+        self.back_button = ctk.CTkButton(
+            self.right_frame,
+            text="Back to Main Menu",
+            width=200,
+            fg_color="#003a6c",
+            command=lambda: navigate_callback("main_menu"),
+        )
+        self.skip_button.pack(side=tk.BOTTOM, pady=(0, 20))
 
         self.update_bin_levels()
 
