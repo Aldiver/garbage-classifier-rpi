@@ -105,6 +105,8 @@ class CheckPoints(ctk.CTkFrame):
         """
         try:
             url = f"{API_URL}/points/{rfid}"  # Update with correct API URL
+            print(f"CheckPoints API fetch: {self.student}")
+
             response = requests.get(url)
 
             if response.status_code == 200:
