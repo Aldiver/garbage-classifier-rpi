@@ -109,6 +109,7 @@ class HomePage(ctk.CTkFrame):
 
         # Get the centered position using the utility function
         position_left, position_top = center_modal(self, modal_width, modal_height)
+        print(f"{modal_width}x{modal_height}+{position_left}+{position_top}")
         modal.geometry(f"{modal_width}x{modal_height}+{position_left}+{position_top}")
 
         label = ctk.CTkLabel(modal, text=message, wraplength=180, justify="center")
