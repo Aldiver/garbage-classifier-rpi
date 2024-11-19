@@ -69,6 +69,7 @@ class Leaderboard(ctk.CTkFrame):
         """
         This method automatically navigates to the homepage after 5 seconds if the 'Back' button is not clicked.
         """
+        print(f"Leaderboards page. Waiting for input")
         self.after(5000, self.navigate_callback("homepage"))
 
     def update_with_student_data(self, student_data):
