@@ -4,7 +4,7 @@ from utils.utils import API_URL
 
 class Leaderboard(ctk.CTkFrame):
     def __init__(self, parent, navigate_callback):
-        super().__init__(parent)
+        super().__init__(parent, fg_color="#0077B6")
         self.student = None
 
         # Store the navigation callback
@@ -33,15 +33,15 @@ class Leaderboard(ctk.CTkFrame):
         self.left_frame.grid_columnconfigure(1, weight=1)
 
         # Add "Back" button in the top-left of the frame
-        self.back_button = ctk.CTkButton(self.left_frame, text="Back", command=self.navigate_callback("main_menu"))
+        self.back_button = ctk.CTkButton(self.left_frame, fg_color="white",text_color="black", btext="Back", command=self.navigate_callback("main_menu"))
         self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Add the title for the left frame
-        self.title_label = ctk.CTkLabel(self.left_frame, text="User Ranking", font=("Arial", 24, "bold"), fg_color="white", bg_color="black", text_color="yellow")
+        self.title_label = ctk.CTkLabel(self.left_frame, text="User Ranking", font=("Arial", 24, "bold"), text_color="black")
         self.title_label.grid(row=0, column=1, padx=10, pady=10)
 
         # Create a new frame for the leaderboard labels inside left_frame
-        self.labels_frame = ctk.CTkFrame(self.left_frame)
+        self.labels_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
         self.labels_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=(10, 0), sticky="nsew")
 
         # Grid configuration for labels_frame to center its content
@@ -88,9 +88,7 @@ class Leaderboard(ctk.CTkFrame):
                 self.right_frame,
                 text=f"{index + 1}. {name} -> {points}",  # Use index + 1 for ranking
                 font=("Arial", 24),
-                fg_color="black",
-                bg_color="black",
-                text_color="yellow" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "white"  # Highlight user
+                text_color="white" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "black"  # Highlight user
             )
             label.pack(pady=5)
 
@@ -102,8 +100,6 @@ class Leaderboard(ctk.CTkFrame):
                 self.labels_frame,
                 text=f"{student['rank']}. {name} -> {points}",
                 font=("Arial", 24),
-                fg_color="black",
-                bg_color="black",
-                text_color="yellow" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "white"
+                text_color="white" if student['rank'] == leaderboard_data['student_rank'][0]['rank'] else "black"
             )
             label.pack(pady=5)  # Center the labels in the frame

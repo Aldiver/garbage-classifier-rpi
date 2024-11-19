@@ -79,7 +79,7 @@ class HomePage(ctk.CTkFrame):
             modal, text="OK",
             command=lambda: [
                 modal.destroy(),
-                self.set_student_data(student),
+                self.set_student_data(student), #store student data to App.py
                 self.after(500, lambda: self.navigate_callback("main_menu"))
             ]
         )

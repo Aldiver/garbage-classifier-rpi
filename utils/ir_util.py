@@ -14,3 +14,6 @@ sensor3 = AnalogIn(ads, ADS.P2)  # A2
 
 def get_sensor_value(sensor, threshold=0.5):
     return sensor.voltage
+
+# Converts Analog data to Digital
+#

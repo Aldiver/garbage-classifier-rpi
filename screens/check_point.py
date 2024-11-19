@@ -6,7 +6,7 @@ from utils.utils import API_URL  # Make sure to import your API_URL if needed
 
 class CheckPoints(ctk.CTkFrame):
     def __init__(self, parent, navigate_callback):
-        super().__init__(parent)
+        super().__init__(parent, fg_color="#0077B6")
 
         # Store the navigation callback
         self.navigate_callback = navigate_callback
@@ -16,27 +16,75 @@ class CheckPoints(ctk.CTkFrame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        # Points Display
-        self.points_circle = ctk.CTkLabel(self, text=str(0), font=("Arial", 60), bg_color="black", fg_color="white")
-        self.points_circle.pack(expand=True)
+        # Container Frame for Centering
+        self.center_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.center_frame.pack(expand=True)
+
+        # Circle Canvas
+        self.circle_canvas = tk.Canvas(
+            self.center_frame,
+            width=300,
+            height=300,
+            bg="#0077B6",  # Match theme background color
+            highlightthickness=0
+        )
+
+        self.circle_canvas.create_oval(
+            10, 10, 290, 290,
+            outline="white",
+            width=5
+        )  # Circle
+        self.circle_canvas.pack()
+
+        # Points Display (Inside the Circle)
+        self.points_circle = ctk.CTkLabel(
+            self.circle_canvas,
+            text=str(0),
+            font=("Arial", 48),
+            fg_color="#0077B6",  # Match canvas color
+            text_color="white"
+        )
+        self.points_circle.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         # Greeting Label
-        self.greeting = ctk.CTkLabel(self, text=f"Loading Data", font=("Arial", 24), fg_color="white", bg_color="black")
-        self.greeting.pack(pady=20)
+        self.greeting = ctk.CTkLabel(
+            self.center_frame,
+            text=f"Hello #NoDataLoaded, this is your current point/s.",
+            font=("Arial", 24),
+            text_color="white" if ctk.get_appearance_mode() == "Light" else "white",  # Adjust text color based on theme
+        )
+        self.greeting.pack(pady=(50,10))
 
-        # Info Label
-        self.info_label = ctk.CTkLabel(self, text="", font=("Arial", 20), fg_color="white", bg_color="black")
-        self.info_label.pack(pady=10)
+       # Info Label
+        self.info_label = ctk.CTkLabel(
+            self.center_frame,
+            text=f"Student ID: 25",
+            font=("Arial", 18),
+            text_color="white" if ctk.get_appearance_mode() == "Light" else "white",  # Adjust text color based on theme
+        )
+        self.info_label.pack(pady=5)
 
         # Bottom Buttons
-        self.bottom_frame = ctk.CTkFrame(self, fg_color="black")
-        self.bottom_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=20)
+        self.bottom_frame = ctk.CTkFrame(self, fg_color="#0077B6")
+        self.bottom_frame.pack(side=tk.BOTTOM, pady=20)
 
-        self.leaderboard_button = ctk.CTkButton(self.bottom_frame, text="Leaderboard", fg_color="green", border_color="white", width=200, command=lambda: self.navigate_callback("leaderboard"))
-        self.leaderboard_button.pack(side=tk.LEFT, padx=20)
+        self.skip_button = ctk.CTkButton(
+            self.bottom_frame,
+            text="Back to Main Menu",
+            width=200,
+            fg_color="#003a6c",
+            command=lambda: navigate_callback("main_menu"),
+        )
+        self.skip_button.pack(side=tk.LEFT, padx=20)
 
-        self.skip_button = ctk.CTkButton(self.bottom_frame, text="Skip", fg_color="red", width=200, command=lambda: self.navigate_callback("main_menu"))
-        self.skip_button.pack(side=tk.RIGHT, padx=20)
+        self.leaderboard_button = ctk.CTkButton(
+            self.bottom_frame,
+            text="Leaderboard",
+            width=200,
+            fg_color="#003a6c",
+            command=lambda: navigate_callback("leaderboard"),
+        )
+        self.leaderboard_button.pack(side=tk.RIGHT, padx=20)
 
     def update_with_student_data(self, student_data):
         """
@@ -63,9 +111,9 @@ class CheckPoints(ctk.CTkFrame):
                 # Update points and UI with the fetched data
                 data = response.json()
                 self.points_circle.configure(text=str(data['points']))
-                self.greeting.configure(text=f"Hello {self.student['first_name']} {self.student['last_name']}, your current points are {data['points']}.")
+                self.greeting.configure(text=f"Hello {self.student['first_name']} {self.student['last_name']}, this is your current point/s.")
                 self.info_label.configure(text=f"Student ID: {self.student['id']}")
-                
+
             else:
                 # Handle errors if student not found
                 self.greeting.configure(text="Student not found.")
