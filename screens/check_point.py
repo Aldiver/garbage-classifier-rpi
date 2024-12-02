@@ -77,10 +77,10 @@ class CheckPoints(ctk.CTkFrame):
             font=("Arial", 20),
             command=lambda: navigate_callback("main_menu"),
         )
-        self.skip_button.pack(side=tk.LEFT, padx=20)
+        self.skip_button.pack(side=tk.LEFT, padx=20, ipady=10, ipadx=20)
 
         self.leaderboard_button = ctk.CTkButton(
-            
+
             self.bottom_frame,
             text="Leaderboard",
             width=200,
@@ -89,7 +89,7 @@ class CheckPoints(ctk.CTkFrame):
             font=("Arial", 20),
             command=lambda: navigate_callback("leaderboard"),
         )
-        self.leaderboard_button.pack(side=tk.RIGHT, padx=20)
+        self.leaderboard_button.pack(side=tk.RIGHT, padx=20, ipady=10, ipadx=20)
 
     def update_with_student_data(self, student_data):
         """
