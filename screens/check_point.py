@@ -73,17 +73,20 @@ class CheckPoints(ctk.CTkFrame):
             text="Back to Main Menu",
             width=200,
             fg_color="#003a6c",
-            font=("Arial", 30),
+            height=80,
+            font=("Arial", 20),
             command=lambda: navigate_callback("main_menu"),
         )
         self.skip_button.pack(side=tk.LEFT, padx=20)
 
         self.leaderboard_button = ctk.CTkButton(
+            
             self.bottom_frame,
             text="Leaderboard",
             width=200,
             fg_color="#003a6c",
-            font=("Arial", 30),
+            height=80,
+            font=("Arial", 20),
             command=lambda: navigate_callback("leaderboard"),
         )
         self.leaderboard_button.pack(side=tk.RIGHT, padx=20)
