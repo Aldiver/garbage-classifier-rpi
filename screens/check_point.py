@@ -53,7 +53,7 @@ class CheckPoints(ctk.CTkFrame):
             font=("Arial", 24),
             text_color="white" if ctk.get_appearance_mode() == "Light" else "white",  # Adjust text color based on theme
         )
-        self.greeting.pack(pady=(50,10))
+        self.greeting.pack(pady=(20,10))
 
        # Info Label
         self.info_label = ctk.CTkLabel(
@@ -74,7 +74,7 @@ class CheckPoints(ctk.CTkFrame):
             width=200,
             fg_color="#003a6c",
             height=80,
-            font=("Arial", 20),
+            font=("Arial", 24),
             command=lambda: navigate_callback("main_menu"),
         )
         self.skip_button.pack(side=tk.LEFT, padx=20, ipady=10, ipadx=20)
@@ -86,7 +86,7 @@ class CheckPoints(ctk.CTkFrame):
             width=200,
             fg_color="#003a6c",
             height=80,
-            font=("Arial", 20),
+            font=("Arial", 24),
             command=lambda: navigate_callback("leaderboard"),
         )
         self.leaderboard_button.pack(side=tk.RIGHT, padx=20, ipady=10, ipadx=20)
