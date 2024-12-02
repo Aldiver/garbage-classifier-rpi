@@ -12,7 +12,7 @@ sensor1 = AnalogIn(ads, ADS.P0)  # A0
 sensor2 = AnalogIn(ads, ADS.P1)  # A1
 sensor3 = AnalogIn(ads, ADS.P2)  # A2
 
-def get_sensor_value(sensor, threshold=0.5):
+def get_sensor_value(sensor, threshold=0.7):
     return sensor.voltage
 
 # Converts Analog data to Digital
