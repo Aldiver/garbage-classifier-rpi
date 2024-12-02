@@ -14,9 +14,9 @@ from utils.ultrasonic_util import get_distance, calculate_bin_level, ultrasonic_
 from utils.utils import API_URL, center_modal
 
 subcategories = {
-    'Biodegradeable': ['Wooden Utensils', 'Paper', 'Paper Food Packages'],
-    'Recyclable': ['Juice Box', 'Box', 'Metal', 'Plastic'],
-    'Residual': ['Pen', 'Rag']
+    'Biodegradeable': ['Paper'],
+    'Recyclable': ['Metal'],
+    'Residual': ['Plastic']
 }
 
 class DisposeWaste(ctk.CTkFrame):
