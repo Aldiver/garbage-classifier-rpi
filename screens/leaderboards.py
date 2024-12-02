@@ -24,7 +24,7 @@ class Leaderboard(ctk.CTkFrame):
         self.right_frame.grid(row=0, column=1, padx=10, pady=(10, 0), sticky="nsew")
 
         # Title for Top 10
-        title = ctk.CTkLabel(self.right_frame, text="Top 10 Leaderboard", font=("Arial", 28, "bold"), fg_color="white", bg_color="white")
+        title = ctk.CTkLabel(self.right_frame, text="Top 10 Leaderboard", font=("Arial", 28, "bold"), fg_color="white", bg_color="white", height=40)
         title.pack(pady=20)
 
         # Grid configuration for left_frame (30% for button and title, 70% for labels)
