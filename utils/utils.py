@@ -1,6 +1,6 @@
 # utils.py
 
-API_URL = "http://172.20.10.3:8000/api"
+API_URL = "http://192.168.1.162:8000/api"
 
 def center_modal(window, modal_width, modal_height):
     """
