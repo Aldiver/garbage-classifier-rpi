@@ -72,6 +72,7 @@ class CheckPoints(ctk.CTkFrame):
             self.bottom_frame,
             text="Back to Main Menu",
             width=200,
+            height=50,
             fg_color="#003a6c",
             command=lambda: navigate_callback("main_menu"),
         )
@@ -81,6 +82,7 @@ class CheckPoints(ctk.CTkFrame):
             self.bottom_frame,
             text="Leaderboard",
             width=200,
+            height=50,
             fg_color="#003a6c",
             command=lambda: navigate_callback("leaderboard"),
         )
