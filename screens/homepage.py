@@ -156,7 +156,7 @@ class HomePage(ctk.CTkFrame):
 
         # Get the centered position using the utility function
         position_left, position_top = center_modal(self, modal_width, modal_height)
-        modal.geometry(f"{modal_width}x{modal_height}+{position_left}+{position_top}")
+        form_modal.geometry(f"{modal_width}x{modal_height}+{position_left}+{position_top}")
 
         # Configure grid layout with padding
         form_modal.columnconfigure(0, weight=1)
